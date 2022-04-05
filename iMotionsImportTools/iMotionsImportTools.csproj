@@ -49,7 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\Class1.cs" />
+    <Compile Include="Controller\Controller.cs" />
     <Compile Include="ImportFunctions\WideFind.cs" />
     <Compile Include="ImportFunctions\WideFindMultiTag.cs" />
     <Compile Include="ImportFunctions\IExportable.cs" />
