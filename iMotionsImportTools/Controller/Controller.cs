@@ -5,24 +5,28 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using iMotionsImportTools.Exports;
+using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.ImportFunctions;
-using Timer = System.Timers.Timer;
+using iMotionsImportTools.Network;
+using iMotionsImportTools.Scheduling;
 
-namespace iMotionsImportTools.Controller
+
+namespace iMotionsImportTools.Controllers
 {
     public class Controller
     {
 
-        private bool _started;
-        private readonly Timer _timer;
         private readonly Dictionary<string, IExportable> _exportables;
+        private List<IDataCollection> _dataCollections;
 
-        public Controller(int frequency)
+        private AsyncTcpClient _client;
+
+        public Controller(AsyncTcpClient client)
         {
-            _timer = new Timer(1 / (double)frequency);
-            _timer.AutoReset = true;
             _exportables = new Dictionary<string, IExportable>();
-            _started = false;
+            _dataCollections = new List<IDataCollection>();
+            _client = client;
         }
 
         public void AddExportable(string id, IExportable exportable)
@@ -35,43 +39,20 @@ namespace iMotionsImportTools.Controller
             _exportables.Remove(id);
         }
 
-        public void Start()
+        public void ExportAll(object sender, SchedulerEventArgs args)
         {
-            if (_started)
+            foreach (var export in _exportables)
             {
-                return;
-            }
-            _timer.Elapsed += OnTimedEvent;
-            _timer.Start();
-            _started = true;
-
-        }
-
-        public void Start(int frequency)
-        {
-            if (_started)
-            {
-                return;
-            }
-            _timer.Interval = 1 / (double) frequency;
-            _timer.Elapsed += OnTimedEvent;
-            _timer.Start();
-            _started = true;
-        }
-
-        public void Stop()
-        {
-            _timer.Stop();
-            _started = false;
-        }
-
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            foreach (var pair in _exportables)
-            {
-                // Enqueue in client code
-                pair.Value.Export();
+                var value = export.Value.Export().StringRepr();
+                //Console.WriteLine("Exported data ('"+ export.Key + "'): " + value);
+                var task = Task.Run(async () =>
+                {
+                    await _client.Send(value, new CancellationToken());
+                    //Console.WriteLine("Sent: " + value);
+                });
             }
         }
+        
+        
     }
 }

@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -50,10 +51,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\Controller.cs" />
-    <Compile Include="ImportFunctions\WideFind.cs" />
-    <Compile Include="ImportFunctions\WideFindMultiTag.cs" />
-    <Compile Include="ImportFunctions\IExportable.cs" />
-    <Compile Include="ImportFunctions\ISensor.cs" />
+    <Compile Include="Exports\ExportData.cs" />
+    <Compile Include="Exports\FibaroData.cs" />
+    <Compile Include="Exports\TestData.cs" />
+    <Compile Include="Exports\WideFindReportData.cs" />
+    <Compile Include="iMotionsProtocol\DataCollection.cs" />
+    <Compile Include="iMotionsProtocol\FallDetectionDataCollection.cs" />
+    <Compile Include="Network\AsyncTcpClient.cs" />
+    <Compile Include="Network\ServerInfo.cs" />
+    <Compile Include="Scheduling\PreemptiveScheduler.cs" />
+    <Compile Include="Sensor\AbstractSensor.cs" />
+    <Compile Include="Sensor\ApiSensor.cs" />
+    <Compile Include="Network\CircuitBreaker.cs" />
+    <Compile Include="Network\ApiService.cs" />
+    <Compile Include="Sensor\Fibaro.cs" />
+    <Compile Include="Utilities\HighResolutionTimer.cs" />
+    <Compile Include="Scheduling\IntervalScheduler.cs" />
+    <Compile Include="Scheduling\IScheduler.cs" />
+    <Compile Include="Sensor\ScheduledApiSensor.cs" />
+    <Compile Include="Scheduling\SchedulerEventArgs.cs" />
+    <Compile Include="Sensor\MqttSensor.cs" />
+    <Compile Include="Sensor\SimpleApiSensor.cs" />
+    <Compile Include="Sensor\WideFind.cs" />
+    <Compile Include="Exports\IExportable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -61,9 +81,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="iMotionsProtocol\" />
-    <Folder Include="Network\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
