@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace iMotionsImportTools.Exports
 {
-    public class WideFindReportData : ExportData
+    public class WideFindReport : ExportData
     {
         private static readonly string[] _fieldOrder = new[]
             {"address", "version", "posX", "posY", "posZ", "velX", "velY", "velZ", "battery", "rssi", "timealive"};
@@ -41,7 +41,7 @@ namespace iMotionsImportTools.Exports
             var separatedFields = colonSeparated.Split(',');
 
 
-            var data = new WideFindReportData
+            var data = new WideFindReport
             {
                 MessageString = str
             };
@@ -99,17 +99,19 @@ namespace iMotionsImportTools.Exports
         public new bool Equals(object o)
         {
             // should handle null?
-            if (!(o is WideFindReportData))
+            if (!(o is WideFindReport))
             {
                 return false;
             }
-            var other = (WideFindReportData)o;
+            var other = (WideFindReport)o;
             bool velEqual = VelX == other.VelX && VelY == other.VelY && VelZ == other.VelZ;
             bool posEqual = PosX == other.PosX && PosY == other.PosY && PosZ == other.PosZ;
             bool otherEqual = Address == other.Address && Version == other.Version &&
                               Rssi == other.Rssi && Battery == other.Battery;
             return velEqual && posEqual && otherEqual;
         }
+
+
 
         public new string ToString()
         {

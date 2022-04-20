@@ -10,3 +10,15 @@ C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsIm
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.exe
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.pdb
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.AssemblyReference.cache
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\iMotionsImportTools.exe.config
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\iMotionsImportTools.exe
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\iMotionsImportTools.pdb
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\M2Mqtt.Net.dll
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\M2Mqtt.Net.pdb
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csprojAssemblyReference.cache
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.CoreCompileInputs.cache
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.CopyComplete
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.exe
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.pdb

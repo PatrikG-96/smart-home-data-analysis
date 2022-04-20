@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using iMotionsImportTools.Controller;
 using iMotionsImportTools.Exports;
+using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.ImportFunctions;
 using Newtonsoft.Json;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -24,13 +26,18 @@ namespace iMotionsImportTools.Sensor
             public string type { get; set; }
         }
 
-        public class WideFind : MqttSensor, IExportable
+        public class WideFind : MqttSensor, IExportable, ITunneler
         {
 
 
             private string _latestData;
             public string Tag { get; set;}
             private readonly List<string> _typeFilters;
+
+            public event EventHandler<Sample> Transport;
+            private bool _shouldTunnel;
+
+ 
 
             public WideFind(string id, string brokerAddress) : base(id, brokerAddress)
             {
@@ -73,13 +80,19 @@ namespace iMotionsImportTools.Sensor
                 var type = typeAndId[0];
                 var id = typeAndId[1];
 
-                Console.WriteLine("type: " + type);
-                Console.WriteLine("id: " + id);
-                Console.WriteLine("tag: " + Tag);
-            if (_typeFilters.Contains(type) && (Tag == id || Tag == ""))
+                
+                if (_typeFilters.Contains(type) && (Tag == id || Tag == ""))
                 {
-                    Console.WriteLine("inhere");
+                    
                     _latestData = jsonData.message;
+                    Console.WriteLine("Raw data: " + _latestData);
+                    if (!_shouldTunnel)
+                    {
+                        return;
+                    }
+
+                    var ev = Transport;
+                    ev?.Invoke(ev, VelPosSample.FromString(_latestData));
                 }
                 
 
@@ -88,10 +101,19 @@ namespace iMotionsImportTools.Sensor
             public ExportData Export()
             {
                 Console.WriteLine(_latestData);
-                return WideFindReportData.FromString(_latestData);
+                return WideFindReport.FromString(_latestData);
 
             }
-            
+
+        public void EnableTunneling()
+        {
+            _shouldTunnel = true;
+        }
+
+        public void DisableTunneling()
+        {
+            _shouldTunnel = false;
+        }
     }
 }
 

@@ -50,14 +50,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\Controller.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Controller\ITunneler.cs" />
+    <Compile Include="Controller\Tunnel.cs" />
+    <Compile Include="Controller\ExportController.cs" />
     <Compile Include="Exports\ExportData.cs" />
     <Compile Include="Exports\FibaroData.cs" />
     <Compile Include="Exports\TestData.cs" />
-    <Compile Include="Exports\WideFindReportData.cs" />
-    <Compile Include="iMotionsProtocol\DataCollection.cs" />
-    <Compile Include="iMotionsProtocol\FallDetectionDataCollection.cs" />
+    <Compile Include="Exports\WideFindReport.cs" />
+    <Compile Include="iMotionsProtocol\Message.cs" />
+    <Compile Include="iMotionsProtocol\OldSample.cs" />
+    <Compile Include="iMotionsProtocol\Sample.cs" />
+    <Compile Include="iMotionsProtocol\VelPosSample.cs" />
     <Compile Include="Network\AsyncTcpClient.cs" />
+    <Compile Include="Network\IClient.cs" />
     <Compile Include="Network\ServerInfo.cs" />
     <Compile Include="Scheduling\PreemptiveScheduler.cs" />
     <Compile Include="Sensor\AbstractSensor.cs" />
@@ -65,6 +71,7 @@
     <Compile Include="Network\CircuitBreaker.cs" />
     <Compile Include="Network\ApiService.cs" />
     <Compile Include="Sensor\Fibaro.cs" />
+    <Compile Include="Sensor\Handler.cs" />
     <Compile Include="Utilities\HighResolutionTimer.cs" />
     <Compile Include="Scheduling\IntervalScheduler.cs" />
     <Compile Include="Scheduling\IScheduler.cs" />

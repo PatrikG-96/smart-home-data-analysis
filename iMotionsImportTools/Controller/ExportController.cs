@@ -12,21 +12,59 @@ using iMotionsImportTools.Network;
 using iMotionsImportTools.Scheduling;
 
 
-namespace iMotionsImportTools.Controllers
+namespace iMotionsImportTools.Controller
 {
-    public class Controller
+    public class ExportController
     {
 
         private readonly Dictionary<string, IExportable> _exportables;
-        private List<IDataCollection> _dataCollections;
+        
 
         private AsyncTcpClient _client;
 
-        public Controller(AsyncTcpClient client)
+        private Dictionary<int, Tunnel> _tunnels;
+
+        public ExportController(AsyncTcpClient client)
         {
             _exportables = new Dictionary<string, IExportable>();
-            _dataCollections = new List<IDataCollection>();
+            
             _client = client;
+        }
+
+        public void AddTunnel(int id, ITunneler tunneler)
+        {
+            _tunnels.Add(id, new Tunnel(tunneler, _client));
+        }
+
+        public void RemoveTunnel(int id)
+        {
+            _tunnels.Remove(id);
+        }
+
+        public void OpenTunnel(int id)
+        {
+            _tunnels[id].Open();
+        }
+
+        public void CloseTunnel(int id)
+        {
+            _tunnels[id].Close();
+        }
+
+        public void OpenAllTunnels()
+        {
+            foreach (var pair in _tunnels)
+            {
+                pair.Value.Open();
+            }
+        }
+
+        public void CloseAllTunnels()
+        {
+            foreach (var pair in _tunnels)
+            {
+                pair.Value.Close();
+            }
         }
 
         public void AddExportable(string id, IExportable exportable)

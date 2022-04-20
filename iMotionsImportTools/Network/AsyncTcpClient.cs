@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace iMotionsImportTools.Network
 {
-    public class AsyncTcpClient : IDisposable
+    public class AsyncTcpClient : IClient, IDisposable
     {
 
         public EventHandler<byte[]> OnMessageReceived;
@@ -29,6 +29,8 @@ namespace iMotionsImportTools.Network
          
         }
 
+
+        public Task Send(string data) => Send(Encoding.UTF8.GetBytes(data), new CancellationToken());
         public Task Send(string data, CancellationToken token) => Send(Encoding.UTF8.GetBytes(data), token);
 
         public async Task Send(byte[] data, CancellationToken token)

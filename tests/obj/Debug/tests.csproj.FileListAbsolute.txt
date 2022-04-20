@@ -19,3 +19,24 @@ C:\Users\shirt\smart-home-data-analysis\tests\obj\Debug\tests.csproj.CoreCompile
 C:\Users\shirt\smart-home-data-analysis\tests\obj\Debug\tests.csproj.CopyComplete
 C:\Users\shirt\smart-home-data-analysis\tests\obj\Debug\tests.dll
 C:\Users\shirt\smart-home-data-analysis\tests\obj\Debug\tests.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\tests.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\tests.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\iMotionsImportTools.exe
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\M2Mqtt.Net.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\iMotionsImportTools.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\iMotionsImportTools.exe.config
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\M2Mqtt.Net.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.csprojAssemblyReference.cache
+C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.csproj.CoreCompileInputs.cache
+C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.csproj.CopyComplete
+C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
