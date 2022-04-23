@@ -5,39 +5,29 @@ using iMotionsImportTools.Controller;
 using iMotionsImportTools.Exports;
 using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.ImportFunctions;
+using iMotionsImportTools.Scheduling;
 using Newtonsoft.Json;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
 {
     
-        public class WideFindJSON
-        {
-            internal static readonly List<string> FieldNames = new List<string>()
-            {
-                "version", "posX", "posY", "posZ", "velX", "velY",
-                "velZ", "battery", "rssi", "timealive"
-            };
+     
 
-            public string host { get; set; }
-            public string message { get; set; }
-            public string source { get; set; }
-            public string time { get; set; }
-            public string type { get; set; }
-        }
-
-        public class WideFind : MqttSensor, IExportable, ITunneler
+        public class WideFind : MqttSensor, ITunneler, ISchedulable, IExportable
         {
 
 
             private string _latestData;
-            public string Tag { get; set;}
+            public string Tag { get; set; }
             private readonly List<string> _typeFilters;
 
+            public bool ShouldTunnel { get; set; }
             public event EventHandler<Sample> Transport;
-            private bool _shouldTunnel;
 
- 
+            private string _scheduledData;
+
+            public bool IsScheduled { get; set; }
 
             public WideFind(string id, string brokerAddress) : base(id, brokerAddress)
             {
@@ -61,9 +51,12 @@ namespace iMotionsImportTools.Sensor
 
             public override void OnMessage(object sender, MqttMsgPublishEventArgs e)
             {
-                var message = Encoding.Default.GetString(e.Message);
-                var jsonData = JsonConvert.DeserializeObject<WideFindJSON>(message);
 
+                if (!IsStarted) return;
+
+                var message = Encoding.Default.GetString(e.Message);
+                var jsonData = JsonConvert.DeserializeObject<WideFindJson>(message);
+                //Console.WriteLine("Raw data: " + _latestData);
                 if (jsonData == null)
                 {
                     return;
@@ -81,12 +74,12 @@ namespace iMotionsImportTools.Sensor
                 var id = typeAndId[1];
 
                 
-                if (_typeFilters.Contains(type) && (Tag == id || Tag == ""))
+                if (_typeFilters.Contains(type) && (Tag == id || Tag == "") )
                 {
                     
                     _latestData = jsonData.message;
-                    Console.WriteLine("Raw data: " + _latestData);
-                    if (!_shouldTunnel)
+                    //Console.WriteLine("Raw data: " + _latestData);
+                    if (!ShouldTunnel)
                     {
                         return;
                     }
@@ -100,20 +93,19 @@ namespace iMotionsImportTools.Sensor
 
             public ExportData Export()
             {
-                Console.WriteLine(_latestData);
-                return WideFindReport.FromString(_latestData);
+
+                string dataToExport = IsScheduled ? _scheduledData : _latestData;
+                return WideFindReport.FromString(dataToExport);
 
             }
 
-        public void EnableTunneling()
-        {
-            _shouldTunnel = true;
-        }
 
-        public void DisableTunneling()
-        {
-            _shouldTunnel = false;
+            public void OnScheduledEvent(object sender, SchedulerEventArgs args)
+            {
+                
+                _scheduledData = _latestData;
+                Console.WriteLine("WideFind: "+ _latestData);
+            }
         }
-    }
 }
 

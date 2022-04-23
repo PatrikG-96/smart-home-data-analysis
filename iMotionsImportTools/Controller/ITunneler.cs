@@ -9,10 +9,9 @@ namespace iMotionsImportTools.Controller
 {
     public interface ITunneler
     {
+
+        bool ShouldTunnel { get; set; }
+
         event EventHandler<Sample> Transport;
-
-        void EnableTunneling();
-
-        void DisableTunneling();
     }
 }

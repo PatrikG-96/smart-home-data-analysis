@@ -5,10 +5,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using iMotionsImportTools.Output;
 
 namespace iMotionsImportTools.Network
 {
-    public class AsyncTcpClient : IClient, IDisposable
+    public class AsyncTcpClient : IClient, IDisposable, IOutputDevice
     {
 
         public EventHandler<byte[]> OnMessageReceived;
@@ -140,6 +141,11 @@ namespace iMotionsImportTools.Network
         public void Dispose()
         {
             Close();
+        }
+
+        public async Task Write(string message)
+        {
+            await Send(message);
         }
     }
 }

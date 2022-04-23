@@ -3,15 +3,16 @@ using iMotionsImportTools.Network;
 
 namespace iMotionsImportTools.Sensor
 {
-    public abstract class ApiSensor : AbstractSensor
+    public abstract class ApiSensor : ISensor
     {
         protected readonly ApiService ApiService;
         protected List<string> Routes;
 
-        protected ApiSensor(ApiService service)
+        protected ApiSensor(string id, ApiService service)
         {
             ApiService = service;
             Routes = new List<string>();
+            Id = id;
         }
 
         public void AddRoute(string route)
@@ -24,17 +25,32 @@ namespace iMotionsImportTools.Sensor
             Routes.Remove(route);
         }
 
-        public override bool Connect()
+        public string Id { get; set; }
+        public bool IsStarted { get; private set; }
+        public bool IsConnected { get; private set; }
+
+        public bool Connect()
         {
             // Doesnt make much sense?
+            IsConnected = true;
             return true;
         }
 
-        public override bool Disconnect()
+        public bool Disconnect()
         {
             // Some better stuff could be made?
+            IsConnected = false;
             return true;
         }
 
+        public void Start()
+        {
+            IsStarted = true;
+        }
+
+        public void Stop()
+        {
+            IsStarted = false;
+        }
     }
 }

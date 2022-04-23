@@ -52,9 +52,7 @@ namespace iMotionsImportTools.Network
                     return ServiceUnavailable;
                 }
 
-                var complete_url = _baseUrl + route;
-
-                Console.WriteLine(complete_url);
+                var completeUrl = _baseUrl + route;
 
                 var response = await _client.GetAsync(_baseUrl + route);
 

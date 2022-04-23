@@ -21,7 +21,7 @@ namespace iMotionsImportTools.Controller
         public Tunnel(ITunneler tunneler, IClient client, Func<string,string> parser)
         {
             tunneler.Transport += Forward;
-            tunneler.EnableTunneling();
+            tunneler.ShouldTunnel = true;
             _tunneler = tunneler;
             _client = client;
             _parser = parser;
@@ -49,13 +49,13 @@ namespace iMotionsImportTools.Controller
         public void Open()
         {
             _isClosed = false;
-            _tunneler.EnableTunneling();
+            _tunneler.ShouldTunnel = true;
         }
 
         public void Close()
         {
             _isClosed = true;
-            _tunneler.DisableTunneling();
+            _tunneler.ShouldTunnel = false;
         }
     }
 }

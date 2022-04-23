@@ -5,7 +5,7 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
 {
-    public abstract class MqttSensor : AbstractSensor
+    public abstract class MqttSensor : ISensor
     {
 
         protected MqttClient Client;
@@ -13,7 +13,10 @@ namespace iMotionsImportTools.Sensor
         protected readonly List<string> _topics;
         protected readonly List<byte> _qos;
 
-        public bool IsStarted { get; set; }
+        public string Id { get; set; }
+        public bool IsStarted { get; private set; }
+
+        public bool IsConnected => Client.IsConnected;
 
         protected MqttSensor(string id, string brokerAddress)
         {
@@ -25,7 +28,7 @@ namespace iMotionsImportTools.Sensor
             IsStarted = false;
         }
 
-        public override void Start()
+        public void Start()
         {
             if (IsStarted)
             {
@@ -43,7 +46,7 @@ namespace iMotionsImportTools.Sensor
 
         }
 
-        public override void Stop()
+        public void Stop()
         {
             if (!IsStarted)
             {
@@ -54,7 +57,9 @@ namespace iMotionsImportTools.Sensor
 
         }
 
-        public override bool Connect()
+        
+
+        public bool Connect()
         {
             string clientId = Guid.NewGuid().ToString();
             try
@@ -69,7 +74,7 @@ namespace iMotionsImportTools.Sensor
             }
         }
 
-        public override bool Disconnect()
+        public bool Disconnect()
         {
             try
             {
