@@ -18,18 +18,23 @@ namespace iMotionsImportTools.Controller
     {
 
         private readonly Dictionary<string, IExportable> _exportables;
-        
+
+        private CancellationToken _token;
 
         private AsyncTcpClient _client;
 
         private Dictionary<int, Tunnel> _tunnels;
 
-        public ExportController(AsyncTcpClient client)
+        public ExportController(AsyncTcpClient client, CancellationToken token)
         {
             _exportables = new Dictionary<string, IExportable>();
             
             _client = client;
+
+            _token = token;
         }
+
+        public CancellationToken Token => _token;
 
         public void AddTunnel(int id, ITunneler tunneler)
         {

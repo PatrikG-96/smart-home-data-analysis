@@ -22,7 +22,7 @@ namespace tests
                 Version = "1"
             };
 
-            var sample = new OldSample("VelPos", new List<string> { "F15B89LAMN134V5H","-20.34", "10.34", "1.00", "4500", "3100","100"});
+            var sample = VelPosSample.FromString("REPORT:F15B89LAMN134V5H,0.2.7,4500,3100,100,-20.34,10.34,1.00,4.09,13.12,1556123*U6DF");
             msg.Sample = sample;
 
      

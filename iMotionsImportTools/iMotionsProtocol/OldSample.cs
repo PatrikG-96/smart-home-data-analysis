@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace iMotionsImportTools.iMotionsProtocol
 {
-    public class OldSample
+    public class OldSample : Sample
     {
 
         private List<string> _dataFields;
 
-        public OldSample(string sampleType, List<string> dataFields)
+        public OldSample(string sampleType, List<string> dataFields) : base(sampleType)
         {
             SampleType = sampleType;
             _dataFields = dataFields;

@@ -22,3 +22,4 @@ C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotion
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.CopyComplete
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.exe
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.pdb
+C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.SuggestedBindingRedirects.cache

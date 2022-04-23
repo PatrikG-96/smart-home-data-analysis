@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using iMotionsImportTools.Network;
 using iMotionsImportTools.Controller;
@@ -25,12 +27,22 @@ namespace iMotionsImportTools
 
             var info = new ServerInfo(remoteHost, remotePort);
             var client = new AsyncTcpClient();
+            var src = new CancellationTokenSource();
+            var controller = new ExportController(client, src.Token);
+            
 
-            Task.Run(async () =>
+            client.Connect(info, CancellationToken.None).Wait();
+
+            var task = Task.Run(async () =>
             {
-                client.Connect()
+                await client.Receive(CancellationToken.None);
             });
 
+            config.Client = client;
+            config.RemoteHost = info;
+            config.Controller = controller;
+            
+            return config;
         }
 
     }
