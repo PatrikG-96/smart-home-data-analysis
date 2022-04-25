@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using iMotionsImportTools.logs;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
 {
-    public abstract class MqttSensor : ISensor
+    public abstract class MqttSensor : ISensor, ILogEntity
     {
 
         protected MqttClient Client;
@@ -15,6 +16,7 @@ namespace iMotionsImportTools.Sensor
 
         public string Id { get; set; }
         public bool IsStarted { get; private set; }
+        public string LogName { get; set; }
 
         public bool IsConnected => Client.IsConnected;
 
@@ -26,6 +28,8 @@ namespace iMotionsImportTools.Sensor
             _qos = new List<byte>();
             Id = id;
             IsStarted = false;
+            LogName = "MQTT";
+
         }
 
         public void Start()
@@ -43,7 +47,7 @@ namespace iMotionsImportTools.Sensor
             }
             Client.Subscribe(_topics.ToArray(), _qos.ToArray());
             IsStarted = true;
-
+            
         }
 
         public void Stop()

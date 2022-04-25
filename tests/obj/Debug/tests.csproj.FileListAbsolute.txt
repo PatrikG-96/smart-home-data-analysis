@@ -37,3 +37,14 @@ C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.csproj.CoreComp
 C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.csproj.CopyComplete
 C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.dll
 C:\Users\Patrik G\smart-home-data-analysis\tests\obj\Debug\tests.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Microsoft.TestPlatform.AdapterUtilities.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.Sinks.Console.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.Sinks.File.dll
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.xml
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.Sinks.Console.xml
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.Sinks.File.pdb
+C:\Users\Patrik G\smart-home-data-analysis\tests\bin\Debug\Serilog.Sinks.File.xml

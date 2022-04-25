@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iMotionsImportTools.Sensor;
+using Serilog;
 
 namespace iMotionsImportTools.iMotionsProtocol
 {
@@ -56,7 +58,52 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public override string ToString()
         {
-            return $"{SampleType};{Id};{VelZ};{VelY};{VelX};{PosZ};{PosY};{PosZ}";
+            return $"{SampleType};{Id};{VelZ};{VelY};{VelX};{PosZ};{PosY};{PosX}";
+        }
+
+        public override void Reset()
+        {
+            VelX = VelY = VelZ = PosX = PosY = PosZ = Id = null;
+        }
+
+        public override Sample Copy()
+        {
+            return new VelPosSample
+            {
+                Id = this.Id,
+                PosX = this.PosX,
+                PosY = this.PosY,
+                PosZ = this.PosZ,
+                VelX = this.VelX,
+                VelY = this.VelY,
+                VelZ = this.VelZ
+            };
+        }
+
+        public override void InsertSensorData(ISensor sensor)
+        {
+            if (sensor is WideFind wideFind)
+            {
+                var messageString = wideFind.GetData();
+
+                if (messageString == null)
+                {
+                    return;
+                }
+
+                var colonSeparated = messageString.Substring(messageString.IndexOf(':') + 1);
+                Log.Logger.Debug("Message: {A}", colonSeparated);
+                var separatedFields = colonSeparated.Split(',');
+                Id = separatedFields[IdIndex];
+                VelX = separatedFields[VelXIndex];
+                
+                VelY = separatedFields[VelYIndex];
+                VelZ = separatedFields[VelZIndex];
+                PosX = separatedFields[PosXIndex];
+                Log.Logger.Debug("PosX: {A}", PosX);
+                PosY = separatedFields[PosYIndex];
+                PosZ = separatedFields[PosZIndex];
+            }
         }
 
         private sealed class VelPosSampleEqualityComparer : IEqualityComparer<VelPosSample>

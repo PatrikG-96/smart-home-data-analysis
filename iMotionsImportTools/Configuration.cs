@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using iMotionsImportTools.Network;
 using iMotionsImportTools.Controller;
 using iMotionsImportTools.Scheduling;
+using Serilog;
 
 namespace iMotionsImportTools
 {
@@ -18,9 +19,14 @@ namespace iMotionsImportTools
         public AsyncTcpClient Client { get; private set; }
         public SensorController Controller { get; private set; }
 
+
         public static Configuration Configure()
         {
-
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("my_log.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
             var config = new Configuration();
 
             string remoteHost = "127.0.0.1";
@@ -29,7 +35,7 @@ namespace iMotionsImportTools
             var info = new ServerInfo(remoteHost, remotePort);
             var client = new AsyncTcpClient();
             var src = new CancellationTokenSource();
-            var controller = new SensorController(client, new IntervalScheduler(1000), src.Token);
+            var controller = new SensorController(client,  src.Token);
             
 
             client.Connect(info, CancellationToken.None).Wait();

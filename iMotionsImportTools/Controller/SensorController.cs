@@ -1,26 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
-using iMotionsImportTools.Exports;
 using iMotionsImportTools.iMotionsProtocol;
-using iMotionsImportTools.ImportFunctions;
 using iMotionsImportTools.Network;
 using iMotionsImportTools.Scheduling;
 using iMotionsImportTools.Sensor;
-
+using Serilog;
 
 namespace iMotionsImportTools.Controller
 {
     public class SensorController
     {
+        private Dictionary<string, IScheduler> _schedulers;
 
-        private readonly Dictionary<string, ISensor> _sensors;
+        private readonly List<SensorSamples> _sensors;
 
-        private readonly List<IExportable> _exportables;
+        private readonly Dictionary<string, Sample> _samples;
 
         private CancellationToken _globalToken;
 
@@ -30,55 +26,67 @@ namespace iMotionsImportTools.Controller
 
         private IScheduler _scheduler;
 
-        public SensorController(IClient client, IScheduler scheduler, CancellationToken globalToken)
+
+        public SensorController(IClient client, CancellationToken token)
         {
-            _sensors = new Dictionary<string, ISensor>();
-
-            _exportables = new List<IExportable>();
-
-            _tunnels = new Dictionary<int, Tunnel>();
-            
             _client = client;
+            _globalToken = token;
 
-            _globalToken = globalToken;
-
-            _scheduler = scheduler;
+            _samples = new Dictionary<string, Sample>();
+            _sensors = new List<SensorSamples>();
+            _tunnels = new Dictionary<int, Tunnel>();
+            _schedulers = new Dictionary<string, IScheduler>();
         }
 
-        public CancellationToken GlobalToken => _globalToken;
+        public void ScheduleExports(IScheduler scheduler)
+        {
+            _scheduler = scheduler;
+            _scheduler.Events += ExportAll;
+        }
+
+
         public void ConnectAll()
         {
             Console.WriteLine("conencting");
-            foreach (var sensor in _sensors)
+            foreach (var sensorWrapper in _sensors)
             {
-                if (!sensor.Value.Connect()) Console.WriteLine("connecting failed");
+                if (!sensorWrapper.Sensor.Connect()) Console.WriteLine("connecting failed");
             }
         }
 
         public void DisconnectAll()
         {
-            foreach (var sensor in _sensors)
+            foreach (var sensorWrapper in _sensors)
             {
-                sensor.Value.Disconnect();
+                sensorWrapper.Sensor.Disconnect();
             }
         }
 
         public void StartAll()
         {
-            foreach (var sensor in _sensors)
+            foreach (var sensorWrapper in _sensors)
             {
-                sensor.Value.Start();
+                sensorWrapper.Sensor.Start();
             }
-            _scheduler.Start();
+
+            foreach (var pair in _schedulers)
+            {
+                pair.Value.Start();
+            }
+            _scheduler?.Start();
         }
 
         public void StopAll()
         {
-            foreach (var sensor in _sensors)
+            foreach (var sensorWrapper in _sensors)
             {
-                sensor.Value.Stop();
+                sensorWrapper.Sensor.Stop();
             }
-            _scheduler.Stop();
+            foreach (var pair in _schedulers)
+            {
+                pair.Value.Stop();
+            }
+            _scheduler?.Stop();
         }
         public void AddTunnel(int id, ITunneler tunneler)
         {
@@ -116,45 +124,38 @@ namespace iMotionsImportTools.Controller
             }
         }
 
-        public void AddSensor(string id, ISensor sensor, bool shouldSchedule = false)
+        public void AddSensor(ISensor sensor)
         {
-            _sensors.Add(id, sensor);
-
-            if (sensor is IExportable export)
-            {
-                _exportables.Add(export);
-            }
-
-            if (!shouldSchedule) return;
-
-            if (sensor is ISchedulable schedulable)
-            {
-                _scheduler.Events += schedulable.OnScheduledEvent;
-            }
-            else
-            {
-                throw new Exception("not schedulable");
-            }
+            _sensors.Add(new SensorSamples(sensor));
         }
 
-        public void RemoveSensor(string id)
+        public ISensor GetSensor(string id)
         {
-            if (!_sensors.TryGetValue(id, out var sensor)) return;
-
-
-            if (sensor is IExportable export)
+            foreach (var sensorWrapper in _sensors)
             {
-                _exportables.Remove(export);
+                if (sensorWrapper.Sensor.Id == id)
+                {
+                    return sensorWrapper.Sensor;
+                }
             }
 
-            if (sensor is ISchedulable schedulable)
+            return null;
+        }
+
+        public void AddScheduler(string name, IScheduler scheduler)
+        {
+            _schedulers.Add(name, scheduler);
+        }
+
+        public void ScheduleSensor(string sensorId, string schedulerName)
+        {
+            var sensor = GetSensor(sensorId);
+            var scheduler = _schedulers[schedulerName];
+
+            if (sensor is ISchedulable schedulable && scheduler != null)
             {
-                _scheduler.Events -= schedulable.OnScheduledEvent;
+                scheduler.Events += schedulable.OnScheduledEvent;
             }
-
-            _sensors.Remove(id);
-
-            
         }
 
         public void Quit()
@@ -166,23 +167,97 @@ namespace iMotionsImportTools.Controller
             src.Cancel();
         }
 
-        public void ExportAll(object sender, SchedulerEventArgs args)
+
+        public void AddSample(string id, Sample sample)
         {
-            foreach (var export in _exportables)
+            _samples.Add(id, sample);
+        }
+
+        public void RemoveSample(string id)
+        {
+            _samples.Remove(id);
+        }
+
+        public Sample GetSample(string id)
+        {
+            return _samples[id];
+        }
+
+        public void AddSampleSensorSubscription(string sampleId, string sensorId)
+        {
+            foreach (var sensorWrapper in _sensors)
             {
-                
-                var value = export.Export().StringRepr();
-                //Console.WriteLine("Exported data ('"+ export.Key + "'): " + value);
-                var task = Task.Run(async () =>
+                if (sensorWrapper.Sensor.Id == sensorId)
                 {
-                    await _client.Send(value, new CancellationToken());
-                    //Console.WriteLine("Sent: " + value);
-                });
-                
-                
+                    sensorWrapper.AddSubscribingSample(sampleId);
+                    return;
+                }
             }
         }
-        
-        
+
+        public void RemoveSampleSensorSubscription(string sampleId, string sensorId)
+        {
+            foreach (var sensorWrapper in _sensors)
+            {
+                if (sensorWrapper.Sensor.Id == sensorId)
+                {
+                    sensorWrapper.RemoveSubscribingSample(sampleId);
+                    return;
+                }
+            }
+        }
+
+        private void ExportAll(object sender, SchedulerEventArgs args)
+        {
+
+            Log.Logger.Debug("Exporting...");
+
+            var usedSamples = new HashSet<Sample>();
+            foreach (var sensorWrapper in _sensors)
+            {
+                var sensor = sensorWrapper.Sensor;
+                foreach (var sampleId in sensorWrapper.SubscriberIds)
+                {
+                    var sample = _samples[sampleId];
+                    try
+                    {
+                        sample.InsertSensorData(sensor);
+                        usedSamples.Add(sample);
+                        Log.Logger.Debug("Exported from sensor '{A}'. Added data to sample '{B}", sensor.Id, sampleId);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                        Log.Logger.Warning("Failed to insert sensor data into sample. '{A}'", e.ToString());
+                    }
+                }
+
+            }
+
+
+            foreach (var sample in usedSamples)
+            {
+
+               
+                var msg = new Message
+                {
+                    Source = sample.ParentSource,
+                    Version = Message.DefaultVersion,
+                    Type = Message.Event,
+                    Sample = sample.Copy()
+                };
+
+                Task.Run(async () =>
+                {
+                    await _client.Send(msg.ToString(), _globalToken);
+                });
+            }
+
+            foreach (var sample in usedSamples)
+            {
+                sample.Reset();
+            }
+
+        }
     }
 }

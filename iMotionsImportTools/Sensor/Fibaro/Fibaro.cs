@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using iMotionsImportTools.Controller;
-using iMotionsImportTools.Exports;
 using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.Network;
 using iMotionsImportTools.Scheduling;
@@ -13,7 +12,7 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
 {
-    public class Fibaro : MqttSensor, IExportable, ISchedulable, ITunneler
+    public class Fibaro : MqttSensor, ISchedulable, ITunneler
     {
         private readonly string _username;
         private readonly string _password;
@@ -65,17 +64,14 @@ namespace iMotionsImportTools.Sensor
 
 
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 Console.WriteLine("Probably received an initialization message");
                 
             }
         }
 
-        public ExportData Export()
-        {
-            throw new NotImplementedException();
-        }
+   
 
         
 

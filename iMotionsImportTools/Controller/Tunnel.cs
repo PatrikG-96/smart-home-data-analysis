@@ -1,4 +1,4 @@
-﻿using iMotionsImportTools.Exports;
+﻿
 using iMotionsImportTools.Network;
 using System;
 using System.Collections.Generic;

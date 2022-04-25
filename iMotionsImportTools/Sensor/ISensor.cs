@@ -6,6 +6,7 @@
         string Id { get; set; }
         bool IsStarted { get;}
 
+
         bool IsConnected { get; }
 
         bool Connect();

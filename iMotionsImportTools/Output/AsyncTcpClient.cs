@@ -5,11 +5,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using iMotionsImportTools.logs;
 using iMotionsImportTools.Output;
+using Serilog;
 
 namespace iMotionsImportTools.Network
 {
-    public class AsyncTcpClient : IClient, IDisposable, IOutputDevice
+    public class AsyncTcpClient : IClient, IDisposable, IOutputDevice, ILogEntity
     {
 
         public EventHandler<byte[]> OnMessageReceived;
@@ -21,13 +23,15 @@ namespace iMotionsImportTools.Network
         public bool Connected => _client != null && _client.Connected;
         public bool Receiving { get; set; }
 
+        public string LogName { get; set; }
+
         // max and min buffer sizes?
         private int BufferSize { get; set; } = 8192;
         
 
-        public AsyncTcpClient()
+        public AsyncTcpClient(string id = "")
         {
-         
+            LogName = "AsyncTcpClient:" + id;
         }
 
 
@@ -38,6 +42,7 @@ namespace iMotionsImportTools.Network
         {
             try
             {
+                Log.Logger.Debug("Sending message: {A}", Encoding.Default.GetString(data));
                 await _stream.WriteAsync(data, 0, data.Length, token);
                 await _stream.FlushAsync(token);
             }
@@ -147,5 +152,7 @@ namespace iMotionsImportTools.Network
         {
             await Send(message);
         }
+
+        
     }
 }

@@ -33,24 +33,5 @@ namespace tests
             Assert.IsTrue(VelPosSample.VelPosSampleComparer.Equals(resultingSample, expectedSample));
         }
 
-        [TestMethod]
-        public void TestProtocolMessageParsing()
-        {
-            string expected = "E;1;WideFind;;;;;VelPos;F15B89LAMN134V5H;-20.34;10.34;1.00;4500;3100;100\r\n";
-
-            var msg = new Message
-            {
-                Source = "WideFind",
-                Type = Message.Event,
-                Version = "1"
-            };
-
-            var sample = new OldSample("VelPos", new List<string> { "F15B89LAMN134V5H", "-20.34", "10.34", "1.00", "4500", "3100", "100" });
-            msg.Sample = sample;
-
-
-            Assert.AreEqual(msg.ToString(), expected);
-
-        }
     }
 }

@@ -3,7 +3,6 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 using System;
 using System.Globalization;
 using System.Text;
-using iMotionsImportTools.Exports;
 using iMotionsImportTools.Sensor;
 
 namespace tests
@@ -30,7 +29,7 @@ namespace tests
             sensor.Tag = tag;
             sensor.OnMessage(null, args);
 
-            Assert.AreEqual(msg, sensor.Export().StringRepr());
+            Assert.AreEqual(msg, sensor.GetData());
         }
     }
 }

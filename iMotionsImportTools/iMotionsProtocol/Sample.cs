@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using iMotionsImportTools.Sensor;
 
 namespace iMotionsImportTools.iMotionsProtocol
 {
@@ -18,6 +19,12 @@ namespace iMotionsImportTools.iMotionsProtocol
         }
 
         public abstract override string ToString();
+
+        public abstract void Reset();
+
+        public abstract Sample Copy();
+
+        public abstract void InsertSensorData(ISensor sensor);
 
     }
 }

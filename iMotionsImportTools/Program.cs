@@ -9,11 +9,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using iMotionsImportTools.Controller;
-using iMotionsImportTools.Exports;
+
+using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.ImportFunctions;
 using iMotionsImportTools.Network;
 using iMotionsImportTools.Scheduling;
 using iMotionsImportTools.Sensor;
+using Serilog;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -53,6 +55,13 @@ namespace iMotionsImportTools
         
         static void Main(string[] args)
         {
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("my_log.log", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             var wideFind = new WideFind("1", "130.240.74.55");
             wideFind.AddTopic("ltu-system/#");
             wideFind.AddType("REPORT");
@@ -61,16 +70,19 @@ namespace iMotionsImportTools
 
             
 
-            //https://gorest.co.in/public/v2/users
+            
             var client = new AsyncTcpClient();
+            var sample = new VelPosSample();
 
-
-            var controller = new SensorController(client, new IntervalScheduler(1000), CancellationToken.None);
-            controller.AddSensor("1",wideFind, true);
-            controller.AddTunnel(1, wideFind);
-            Console.WriteLine("hej1");
+            var controller = new SensorController(client,  CancellationToken.None);
+            controller.ScheduleExports(new IntervalScheduler(500));
+            controller.AddSensor(wideFind);
+            controller.AddSample("VelPos", sample);
+            controller.AddSampleSensorSubscription("VelPos", "1");
+            //controller.AddTunnel(1, wideFind);
+         
             client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
-            Console.WriteLine("hej2");
+            
             Task.Run(async () =>
             {
                 await client.Receive(CancellationToken.None);

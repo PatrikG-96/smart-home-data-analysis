@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using iMotionsImportTools.Controller;
-using iMotionsImportTools.Exports;
 using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.ImportFunctions;
 using iMotionsImportTools.Scheduling;
 using Newtonsoft.Json;
+using Serilog;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
@@ -14,7 +14,7 @@ namespace iMotionsImportTools.Sensor
     
      
 
-        public class WideFind : MqttSensor, ITunneler, ISchedulable, IExportable
+        public class WideFind : MqttSensor, ITunneler, ISchedulable
         {
 
 
@@ -24,6 +24,7 @@ namespace iMotionsImportTools.Sensor
 
             public bool ShouldTunnel { get; set; }
             public event EventHandler<Sample> Transport;
+     
 
             private string _scheduledData;
 
@@ -33,6 +34,7 @@ namespace iMotionsImportTools.Sensor
             {
                 _typeFilters = new List<string>();
                 Tag = "";
+                LogName += ":WideFind";
             }
 
             public void AddType(string typeName)
@@ -49,6 +51,8 @@ namespace iMotionsImportTools.Sensor
             }
 
 
+           
+
             public override void OnMessage(object sender, MqttMsgPublishEventArgs e)
             {
 
@@ -64,9 +68,9 @@ namespace iMotionsImportTools.Sensor
 
                 // Check if source field in widefind json is useable instead of manipulating string
 
-                int firstComma = jsonData.message.IndexOf(',');
+                int firstComma = jsonData.Message.IndexOf(',');
 
-                string firstCommaSubstring = jsonData.message.Substring(0, firstComma);
+                string firstCommaSubstring = jsonData.Message.Substring(0, firstComma);
 
                 string[] typeAndId = firstCommaSubstring.Split(':');
 
@@ -77,12 +81,18 @@ namespace iMotionsImportTools.Sensor
                 if (_typeFilters.Contains(type) && (Tag == id || Tag == "") )
                 {
                     
-                    _latestData = jsonData.message;
-                    //Console.WriteLine("Raw data: " + _latestData);
+                    _latestData = jsonData.Message;
+
+                   
+                    Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData);
+                    
+
                     if (!ShouldTunnel)
                     {
                         return;
                     }
+
+                    Log.Logger.Debug("{A}:{B} Tunneling message.");
 
                     var ev = Transport;
                     ev?.Invoke(ev, VelPosSample.FromString(_latestData));
@@ -91,13 +101,11 @@ namespace iMotionsImportTools.Sensor
 
             }
 
-            public ExportData Export()
+            public string GetData()
             {
+                return IsScheduled ? _scheduledData : _latestData;
+        }
 
-                string dataToExport = IsScheduled ? _scheduledData : _latestData;
-                return WideFindReport.FromString(dataToExport);
-
-            }
 
 
             public void OnScheduledEvent(object sender, SchedulerEventArgs args)

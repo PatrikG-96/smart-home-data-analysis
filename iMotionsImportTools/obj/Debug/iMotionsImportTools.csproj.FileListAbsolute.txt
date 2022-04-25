@@ -23,3 +23,10 @@ C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotion
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.exe
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.pdb
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.SuggestedBindingRedirects.cache
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.dll
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.Console.dll
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.dll
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.xml
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.Console.xml
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.pdb
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.xml
