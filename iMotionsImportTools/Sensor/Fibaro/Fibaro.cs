@@ -12,6 +12,12 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
 {
+
+    // 130.240.74.55
+    // your_mqtt_username
+    // your_mqtt_password
+    // homeassistant/#
+
     public class Fibaro : MqttSensor, ISchedulable, ITunneler
     {
         private readonly string _username;
@@ -39,6 +45,7 @@ namespace iMotionsImportTools.Sensor
             try
             {
                 Client.Connect(clientId, username: _username, password:_password);
+                Console.WriteLine("connected");
                 return true;
             }
             catch (Exception e)

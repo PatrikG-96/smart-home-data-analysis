@@ -4,13 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.Network;
+using iMotionsImportTools.Output;
 using iMotionsImportTools.Scheduling;
 using iMotionsImportTools.Sensor;
 using Serilog;
 
 namespace iMotionsImportTools.Controller
 {
-    public class SensorController
+    public class IMotionsController
     {
         private Dictionary<string, IScheduler> _schedulers;
 
@@ -20,14 +21,14 @@ namespace iMotionsImportTools.Controller
 
         private CancellationToken _globalToken;
 
-        private IClient _client;
+        private IOutputDevice _client;
 
         private Dictionary<int, Tunnel> _tunnels;
 
         private IScheduler _scheduler;
 
 
-        public SensorController(IClient client, CancellationToken token)
+        public IMotionsController(IOutputDevice client, CancellationToken token)
         {
             _client = client;
             _globalToken = token;
@@ -249,8 +250,8 @@ namespace iMotionsImportTools.Controller
 
                 Task.Run(async () =>
                 {
-                    await _client.Send(msg.ToString(), _globalToken);
-                });
+                    await _client.Write(msg.ToString());
+                }, _globalToken);
             }
 
             foreach (var sample in usedSamples)

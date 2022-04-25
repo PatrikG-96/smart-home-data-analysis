@@ -61,7 +61,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Controller\ITunneler.cs" />
-    <Compile Include="Controller\SensorController.cs" />
+    <Compile Include="Controller\IMotionsController.cs" />
     <Compile Include="Controller\SensorSamples.cs" />
     <Compile Include="Controller\Tunnel.cs" />
     <Compile Include="iMotionsProtocol\Message.cs" />

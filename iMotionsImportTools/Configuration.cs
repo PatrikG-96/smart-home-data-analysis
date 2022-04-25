@@ -17,7 +17,7 @@ namespace iMotionsImportTools
 
         public ServerInfo RemoteHost { get; private set; }
         public AsyncTcpClient Client { get; private set; }
-        public SensorController Controller { get; private set; }
+        public IMotionsController Controller { get; private set; }
 
 
         public static Configuration Configure()
@@ -35,7 +35,7 @@ namespace iMotionsImportTools
             var info = new ServerInfo(remoteHost, remotePort);
             var client = new AsyncTcpClient();
             var src = new CancellationTokenSource();
-            var controller = new SensorController(client,  src.Token);
+            var controller = new IMotionsController(client,  src.Token);
             
 
             client.Connect(info, CancellationToken.None).Wait();

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using iMotionsImportTools.iMotionsProtocol;
+using iMotionsImportTools.Output;
 
 namespace iMotionsImportTools.Controller
 {
@@ -13,12 +14,12 @@ namespace iMotionsImportTools.Controller
     {
 
         private readonly Func<string, string> _parser;
-        private readonly IClient _client;
+        private readonly IOutputDevice _client;
         private readonly ITunneler _tunneler;
 
         private bool _isClosed;
 
-        public Tunnel(ITunneler tunneler, IClient client, Func<string,string> parser)
+        public Tunnel(ITunneler tunneler, IOutputDevice client, Func<string,string> parser)
         {
             tunneler.Transport += Forward;
             tunneler.ShouldTunnel = true;
@@ -27,7 +28,7 @@ namespace iMotionsImportTools.Controller
             _parser = parser;
         }
 
-        public Tunnel(ITunneler tunneler, IClient client) : this(tunneler, client, null) { }
+        public Tunnel(ITunneler tunneler, IOutputDevice client) : this(tunneler, client, null) { }
 
         private void Forward(object sender, Sample sample)
         {
@@ -42,7 +43,7 @@ namespace iMotionsImportTools.Controller
                     Version = Message.DefaultVersion,
                     Sample = sample
                 };
-                await _client.Send(message.ToString());
+                await _client.Write(message.ToString());
             });
         }
 
