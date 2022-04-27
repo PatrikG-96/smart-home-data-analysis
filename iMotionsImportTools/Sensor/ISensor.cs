@@ -1,5 +1,8 @@
 ﻿namespace iMotionsImportTools.Sensor
 {
+
+    //TODO:
+    // Some interface method for retrieving data. Maybe generics to allow for different data types for different sensors? (ISensor<T>)
     public interface ISensor
     {
 

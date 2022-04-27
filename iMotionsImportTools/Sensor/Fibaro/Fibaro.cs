@@ -18,6 +18,9 @@ namespace iMotionsImportTools.Sensor
     // your_mqtt_password
     // homeassistant/#
 
+    // TODO: 
+    // Better abstraction of a Fibaro device.
+    // 
     public class Fibaro : MqttSensor, ISchedulable, ITunneler
     {
         private readonly string _username;

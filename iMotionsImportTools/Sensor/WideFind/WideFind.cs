@@ -12,7 +12,9 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 namespace iMotionsImportTools.Sensor
 {
     
-     
+        // TODO: 
+        // Allow for multiple tags to be used. Maybe make a handler class where a widefind instance is just a tag intance?
+        // Allow for data to be extracted on per tag basis
 
         public class WideFind : MqttSensor, ITunneler, ISchedulable
         {

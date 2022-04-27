@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using Serilog;
 using Timer = System.Timers.Timer;
 
 namespace iMotionsImportTools.ImportFunctions
@@ -34,18 +35,20 @@ namespace iMotionsImportTools.ImportFunctions
 
         public void OpenCircuit(string reason = null)
         {
+            // if circuit is closed, set it to open in an atomic operation
             if (Interlocked.CompareExchange(ref _circuitState, Open, Closed) == Closed)
             {
-                if (reason!= null) Console.WriteLine("Opening circuit for reason: " + reason);
+                if (reason!= null) Log.Logger.Warning("Opening circuit for reason: " + reason);
+                _timer.Start(); // start timer for closing the circuit again
             }
-            _timer.Start();
         }
 
         public void CloseCircuit()
         {
+            // if circuit is open, close it in an atomic operation
             if (Interlocked.CompareExchange(ref _circuitState, Closed, Open) == Open)
             {
-                Console.WriteLine("Closing circuit...");
+                Log.Logger.Debug("Closed circuit after '{A}' ms.", _timer.Interval);
             }
         }
 

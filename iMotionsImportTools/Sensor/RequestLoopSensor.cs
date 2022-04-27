@@ -10,7 +10,7 @@ namespace iMotionsImportTools.Sensor
     {
 
         public bool IsScheduled { get; set; }
-        protected ConcurrentDictionary<string, string> Data;
+        protected ConcurrentDictionary<string, string> Data; // route -> data for that route
 
         public RequestLoopSensor(string id, ApiService service) : base(id, service)
         {

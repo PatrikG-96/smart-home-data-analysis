@@ -15,7 +15,7 @@ namespace iMotionsImportTools.Controller
     {
         private Dictionary<string, IScheduler> _schedulers;
 
-        private readonly List<SensorSamples> _sensors;
+        private readonly List<SensorWithSampleSubscribers> _sensors;
 
         private readonly Dictionary<string, Sample> _samples;
 
@@ -34,7 +34,7 @@ namespace iMotionsImportTools.Controller
             _globalToken = token;
 
             _samples = new Dictionary<string, Sample>();
-            _sensors = new List<SensorSamples>();
+            _sensors = new List<SensorWithSampleSubscribers>();
             _tunnels = new Dictionary<int, Tunnel>();
             _schedulers = new Dictionary<string, IScheduler>();
         }
@@ -48,10 +48,9 @@ namespace iMotionsImportTools.Controller
 
         public void ConnectAll()
         {
-            Console.WriteLine("conencting");
             foreach (var sensorWrapper in _sensors)
             {
-                if (!sensorWrapper.Sensor.Connect()) Console.WriteLine("connecting failed");
+                if (!sensorWrapper.Sensor.Connect()) Log.Logger.Warning("Failed to connected sensor '{A}'", sensorWrapper.Sensor.Id);
             }
         }
 
@@ -127,7 +126,7 @@ namespace iMotionsImportTools.Controller
 
         public void AddSensor(ISensor sensor)
         {
-            _sensors.Add(new SensorSamples(sensor));
+            _sensors.Add(new SensorWithSampleSubscribers(sensor));
         }
 
         public ISensor GetSensor(string id)
@@ -153,10 +152,13 @@ namespace iMotionsImportTools.Controller
             var sensor = GetSensor(sensorId);
             var scheduler = _schedulers[schedulerName];
 
-            if (sensor is ISchedulable schedulable && scheduler != null)
+            if (!(sensor is ISchedulable schedulable) || scheduler == null)
             {
-                scheduler.Events += schedulable.OnScheduledEvent;
+                throw new Exception("Either sensor or scheduler wasn't found");
             }
+                
+            scheduler.Events += schedulable.OnScheduledEvent;
+
         }
 
         public void Quit()
@@ -208,53 +210,55 @@ namespace iMotionsImportTools.Controller
             }
         }
 
+        // Called by the scheduler.
         private void ExportAll(object sender, SchedulerEventArgs args)
         {
 
             Log.Logger.Debug("Exporting...");
 
-            var usedSamples = new HashSet<Sample>();
+            var modifiedSamples = new HashSet<Sample>(); // To keep track of samples that have actually been modified
+
             foreach (var sensorWrapper in _sensors)
             {
                 var sensor = sensorWrapper.Sensor;
-                foreach (var sampleId in sensorWrapper.SubscriberIds)
+                foreach (var sampleId in sensorWrapper.SubscriberIds) // for each sample that is subscribed to this sensor
                 {
                     var sample = _samples[sampleId];
                     try
                     {
-                        sample.InsertSensorData(sensor);
-                        usedSamples.Add(sample);
+                        sample.InsertSensorData(sensor); // let the sample add the data it wants
+                        modifiedSamples.Add(sample);  // no duplicates due to HashSet
                         Log.Logger.Debug("Exported from sensor '{A}'. Added data to sample '{B}", sensor.Id, sampleId);
                     }
                     catch (Exception e)
                     {
-                        // ignored
+                        // Should probably never get here as errors are handled elsewhere, but you never know
                         Log.Logger.Warning("Failed to insert sensor data into sample. '{A}'", e.ToString());
                     }
                 }
 
             }
 
-
-            foreach (var sample in usedSamples)
+            foreach (var sample in modifiedSamples)
             {
-
-               
+                // message according to iMotions protocol
                 var msg = new Message
                 {
                     Source = sample.ParentSource,
                     Version = Message.DefaultVersion,
                     Type = Message.Event,
-                    Sample = sample.Copy()
+                    Sample = sample.Copy() // to avoid race conditions when resetting samples
                 };
 
+                // write the message string to an output device
                 Task.Run(async () =>
                 {
                     await _client.Write(msg.ToString());
                 }, _globalToken);
             }
 
-            foreach (var sample in usedSamples)
+            // reset all samples to avoid stale data (this is why we copy above)
+            foreach (var sample in modifiedSamples)
             {
                 sample.Reset();
             }

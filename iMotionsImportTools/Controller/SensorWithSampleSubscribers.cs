@@ -3,13 +3,13 @@ using iMotionsImportTools.Sensor;
 
 namespace iMotionsImportTools.Controller
 {
-    public class SensorSamples
+    public class SensorWithSampleSubscribers
     {
         
         public ISensor Sensor { get; private set; }
         public List<string> SubscriberIds { get; }
 
-        public SensorSamples(ISensor sensor)
+        public SensorWithSampleSubscribers(ISensor sensor)
         {
             Sensor = sensor;
             SubscriberIds = new List<string>();

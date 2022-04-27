@@ -2,6 +2,8 @@
 
 namespace iMotionsImportTools.Sensor
 {
+    // TODO:
+    // Move message field indices here
     public class WideFindJson
     {
         public string Host { get; set; }

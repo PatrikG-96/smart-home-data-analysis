@@ -110,14 +110,6 @@ namespace iMotionsImportTools
             Console.ReadKey();
            
 
-      
-/**
-           var fib = new Fibaro("1", "130.240.74.55", "your_mqtt_username", "your_mqtt_password");
-           fib.AddTopic("homeassistant/sensor/68/#");
-           fib.AddTopic("homeassistant/sensor/66/#");
-           fib.AddTopic("homeassistant/sensor/67/#");
-           fib.Connect();
-           fib.Start();**/
         }
 
      

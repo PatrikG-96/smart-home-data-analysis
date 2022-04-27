@@ -14,6 +14,7 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public static IEqualityComparer<VelPosSample> VelPosSampleComparer { get; } = new VelPosSampleEqualityComparer();
 
+        // Move this to a widefind definition
         private const int VelXIndex = 5;
         private const int VelYIndex = 6;
         private const int VelZIndex = 7;

@@ -41,7 +41,7 @@ namespace iMotionsImportTools.Controller
                     Source = sample.ParentSource,
                     Type = Message.Event,
                     Version = Message.DefaultVersion,
-                    Sample = sample
+                    Sample = sample.Copy() // to avoid race conditions
                 };
                 await _client.Write(message.ToString());
             });

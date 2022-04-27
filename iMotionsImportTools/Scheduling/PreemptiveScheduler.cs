@@ -5,6 +5,9 @@ using iMotionsImportTools.Utilities;
 
 namespace iMotionsImportTools.Scheduling
 {
+
+    // This entire idea is kinda messy. Only useful if API requests or other processing need to be made before triggering data exports
+
     public class PreemptiveScheduler : IScheduler
     {
         public bool Debug { set; get; }

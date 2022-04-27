@@ -3,6 +3,10 @@ using iMotionsImportTools.Network;
 
 namespace iMotionsImportTools.Sensor
 {
+
+    // This class is not gonna be needed. Make some minor improvements just to have the support if there is future use cases here
+    // TODO:
+    // Better connect logic
     public abstract class ApiSensor : ISensor
     {
         protected readonly ApiService ApiService;

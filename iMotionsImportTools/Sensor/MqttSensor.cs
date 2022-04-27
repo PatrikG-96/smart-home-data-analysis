@@ -6,6 +6,8 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools.Sensor
 {
+    // TODO:
+    // Better way of doing log names (maybe have a name in ISensor interface?)
     public abstract class MqttSensor : ISensor, ILogEntity
     {
 
