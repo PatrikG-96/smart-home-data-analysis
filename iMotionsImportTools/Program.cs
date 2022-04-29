@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using iMotionsImportTools.CLI;
 using iMotionsImportTools.Controller;
 
 using iMotionsImportTools.iMotionsProtocol;
@@ -16,6 +17,7 @@ using iMotionsImportTools.Network;
 using iMotionsImportTools.Output;
 using iMotionsImportTools.Scheduling;
 using iMotionsImportTools.Sensor;
+using iMotionsImportTools.Sensor.WideFind;
 using Serilog;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -58,33 +60,48 @@ namespace iMotionsImportTools
         {
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Error()
                 .WriteTo.Console()
                 .WriteTo.File("my_log.log", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             var wideFind = new WideFind("1", "130.240.74.55");
             wideFind.AddTopic("ltu-system/#");
-            wideFind.AddType("REPORT");
+            wideFind.AddType(WideFind.REPORT);
             //wideFind.AddType("BEACON");
             wideFind.Tag = "B30D92054F2BF398";
 
-            var fib = new Fibaro("2", "130.240.74.55", "your_mqtt_username", "your_mqtt_password");
-            fib.AddTopic("homeassistant/#");
-            
+            var fib = new FibaroSensor("2", "130.240.74.55", "your_mqtt_username", "your_mqtt_password");
+            fib.AddDevice(FibaroDevices.U121_DOOR_LIGHT);
+            fib.AddDevice(FibaroDevices.U121_DOOR_HUMIDITY);
+            fib.AddDevice(FibaroDevices.U121_DOOR_MOTION);
+            fib.AddDevice(FibaroDevices.U121_DOOR_TEMP);
+
 
             var client = new AsyncTcpClient();
             //var client = new FileOutput("output.txt");
-            var sample = new VelPosSample();
+            var stdout = new Stdout();
+            var sample = new PositionSample();
+            var sample2 = new VelocitySample();
+            var sample3 = new FibaroEntranceSample();
+            var composite = new PosxAndDoorTemp();
 
-            var controller = new IMotionsController(client,  CancellationToken.None);
+            var controller = new IMotionsController(stdout,  CancellationToken.None);
             controller.ScheduleExports(new IntervalScheduler(500));
             controller.AddSensor(wideFind);
-            controller.AddSample("VelPos", sample);
-            controller.AddSampleSensorSubscription("VelPos", "1");
-            controller.AddSensor(fib);
-            //controller.AddTunnel(1, fib);
-         
+            //controller.AddSensor(fib);
+            //controller.AddSample("Pos", sample);
+            //controller.AddSample("Vel", sample2);
+            //controller.AddSample("Fib", sample3);
+            //controller.AddSample("composite", composite);
+            //controller.AddSampleSensorSubscription("Pos", "1");
+            //controller.AddSampleSensorSubscription("Vel", "1");
+            //controller.AddSampleSensorSubscription("Fib", "2");
+            //controller.AddSampleSensorSubscription("composite", "1");
+            //controller.AddSampleSensorSubscription("composite", "2");
+            //controller.AddSensor(fib);
+            controller.AddTunnel(1, wideFind);
+
             client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
             
             Task.Run(async () =>
@@ -94,21 +111,8 @@ namespace iMotionsImportTools
             controller.ConnectAll();
             controller.StartAll();
 
-            Console.ReadKey();
-
-            controller.StopAll();
-            //controller.DisconnectAll();
-            
-            Console.ReadKey();
-
-            controller.StartAll();
-
-            Console.ReadKey();
-
-            controller.Quit();
-
-            Console.ReadKey();
-           
+            var cli = new Cli(controller);
+            cli.Start();
 
         }
 

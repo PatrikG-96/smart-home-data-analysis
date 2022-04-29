@@ -33,7 +33,7 @@ namespace iMotionsImportTools.Sensor
         public bool IsStarted { get; private set; }
         public bool IsConnected { get; private set; }
 
-        public bool Connect()
+        public bool Connect(string username = null, string password = null)
         {
             // Doesnt make much sense?
             IsConnected = true;
@@ -56,5 +56,7 @@ namespace iMotionsImportTools.Sensor
         {
             IsStarted = false;
         }
+
+        public abstract string Status();
     }
 }

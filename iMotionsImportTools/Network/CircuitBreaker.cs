@@ -28,7 +28,6 @@ namespace iMotionsImportTools.ImportFunctions
             _timer = new Timer(interval: resetTime);
             _timer.AutoReset = false;
             _timer.Elapsed += OnElapsedEvent;
-
             _circuitState = Closed;
         }
         

@@ -34,17 +34,16 @@ namespace iMotionsImportTools.Controller
         {
             if (_isClosed) return;
 
-            Task.Run(async () =>
+           
+            var message = new Message
             {
-                var message = new Message
-                {
-                    Source = sample.ParentSource,
-                    Type = Message.Event,
-                    Version = Message.DefaultVersion,
-                    Sample = sample.Copy() // to avoid race conditions
-                };
-                await _client.Write(message.ToString());
-            });
+                Source = sample.ParentSource, 
+                Type = Message.Event, 
+                Version = Message.DefaultVersion, 
+                Sample = sample.Copy() // to avoid race conditions
+            }; 
+            _client.Write(message.ToString());
+            
         }
 
         public void Open()

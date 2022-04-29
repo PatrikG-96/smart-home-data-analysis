@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using iMotionsImportTools.logs;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -10,6 +11,11 @@ namespace iMotionsImportTools.Sensor
     // Better way of doing log names (maybe have a name in ISensor interface?)
     public abstract class MqttSensor : ISensor, ILogEntity
     {
+
+        protected Stopwatch MessageReceivedWatch;
+        protected long TimeStarted;
+
+        public string BaseTopic { get; set; }
 
         protected MqttClient Client;
 
@@ -49,7 +55,8 @@ namespace iMotionsImportTools.Sensor
             }
             Client.Subscribe(_topics.ToArray(), _qos.ToArray());
             IsStarted = true;
-            
+            MessageReceivedWatch = Stopwatch.StartNew();
+            TimeStarted = DateTimeOffset.Now.ToUnixTimeMilliseconds();
         }
 
         public void Stop()
@@ -63,13 +70,20 @@ namespace iMotionsImportTools.Sensor
 
         }
 
-        
+        public abstract string Status();
 
-        public bool Connect()
+
+
+        public bool Connect(string username=null, string password = null)
         {
             string clientId = Guid.NewGuid().ToString();
             try
             {
+                if (username != null && password != null)
+                {
+                    Client.Connect(clientId, username, password);
+                    return true;
+                }
                 Client.Connect(clientId);
                 return true;
             }

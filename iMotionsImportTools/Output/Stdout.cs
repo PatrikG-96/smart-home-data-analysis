@@ -5,9 +5,12 @@ namespace iMotionsImportTools.Output
 {
     public class Stdout: IOutputDevice
     {
-        public async Task Write(string message)
+        public void Write(string message)
         {
-            await Console.Out.WriteLineAsync(message);
+            Task.Run( async () =>
+            {
+                await Console.Out.WriteLineAsync(message);
+            });
         }
     }
 }

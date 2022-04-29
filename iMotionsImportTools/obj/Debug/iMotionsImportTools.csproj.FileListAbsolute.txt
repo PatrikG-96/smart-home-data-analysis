@@ -17,7 +17,6 @@ C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\M2Mqtt.
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\M2Mqtt.Net.pdb
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csprojAssemblyReference.cache
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.CoreCompileInputs.cache
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csproj.CopyComplete
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.exe
@@ -30,3 +29,4 @@ C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.Console.xml
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.pdb
 C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.xml
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\obj\Debug\iMotionsImportTools.csprojAssemblyReference.cache

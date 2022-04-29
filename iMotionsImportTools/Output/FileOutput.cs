@@ -13,12 +13,16 @@ namespace iMotionsImportTools.Output
             _filename = filename;
         }
 
-        public async Task Write(string message)
+        public void Write(string message)
         {
-            using (StreamWriter sw = File.AppendText(_filename))
+            Task.Run(async () =>
             {
-               await sw.WriteAsync(message);
-            }
+                using (StreamWriter sw = File.AppendText(_filename))
+                {
+                    await sw.WriteAsync(message);
+                }
+            });
+
         }
     }
 }

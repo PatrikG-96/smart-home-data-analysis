@@ -12,13 +12,15 @@
 
         bool IsConnected { get; }
 
-        bool Connect();
+        bool Connect(string username=null, string password=null);
 
         bool Disconnect();
 
         void Start();
 
         void Stop();
+
+        string Status();
 
     }
 }

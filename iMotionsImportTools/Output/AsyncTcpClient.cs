@@ -32,6 +32,8 @@ namespace iMotionsImportTools.Network
         public AsyncTcpClient(string id = "")
         {
             LogName = "AsyncTcpClient:" + id;
+            
+
         }
 
 
@@ -75,6 +77,7 @@ namespace iMotionsImportTools.Network
                 await _client.ConnectAsync(info.Address, info.Port);
                 await CloseIfCanceled(token);
                 _stream = _client.GetStream();
+                _stream.WriteTimeout = 100;
             }
             catch (Exception)
             {
@@ -148,9 +151,12 @@ namespace iMotionsImportTools.Network
             Close();
         }
 
-        public async Task Write(string message)
+        public void Write(string message)
         {
-            await Send(message);
+            Task.Run(async () =>
+            {
+                await Send(message);
+            });
         }
 
         

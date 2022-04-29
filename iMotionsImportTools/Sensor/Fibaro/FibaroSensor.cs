@@ -19,44 +19,48 @@ namespace iMotionsImportTools.Sensor
     // homeassistant/#
 
     // TODO: 
-    // Better abstraction of a Fibaro device.
+    // Better abstraction of a FibaroSensor device.
     // 
-    public class Fibaro : MqttSensor, ISchedulable, ITunneler
+    public class FibaroSensor : MqttSensor, ISchedulable, ITunneler
     {
+        
+
         private readonly string _username;
         private readonly string _password;
 
-        private readonly Dictionary<int, string> _data;
-        private Dictionary<int, string> _scheduledFrozenData;
+        private readonly Dictionary<int, FibaroJson> _data;
+        private Dictionary<int, FibaroJson> _scheduledFrozenData;
 
         public bool ShouldTunnel { get; set; }
         public event EventHandler<Sample> Transport;
 
         public bool IsScheduled { get; set; }
 
-        public Fibaro(string id, string brokerAddress, string uname, string pw) : base(id, brokerAddress)
+        public FibaroSensor(string id, string brokerAddress, string uname, string pw) : base(id, brokerAddress)
         {
             _password = pw;
             _username = uname;
-            _data = new Dictionary<int, string>();
+            _data = new Dictionary<int, FibaroJson>();
+            BaseTopic = "homeassistant/sensor/";
         }
 
-
-        public new bool Connect()
+        public void AddDevice(int deviceId)
         {
-            var clientId = Guid.NewGuid().ToString();
-            try
-            {
-                Client.Connect(clientId, username: _username, password:_password);
-                Console.WriteLine("connected");
-                return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
+            _data[deviceId] = new FibaroJson();
+            AddTopic(BaseTopic + deviceId + "/#");
         }
+
+        public void RemoveDevice(int deviceId)
+        {
+            _data.Remove(deviceId);
+            RemoveTopic(BaseTopic + deviceId + "/#");
+        }
+
+        public override string Status()
+        {
+            throw new NotImplementedException();
+        }
+
 
         public override void OnMessage(object sender, MqttMsgPublishEventArgs e)
         {
@@ -69,7 +73,12 @@ namespace iMotionsImportTools.Sensor
                 if (jsonData == null) return;
 
                 Console.WriteLine($"ID:{jsonData.Id}, Name:{jsonData.DeviceName}, Value:{jsonData.Value}");
-                _data[jsonData.Id] = jsonData.Value;
+                if (jsonData.DeviceName == "U121 Kitchen Temp")
+                {
+                    Console.WriteLine("Ugly shit");
+                    return;
+                }
+                _data[jsonData.Id] = jsonData;
 
 
 
@@ -81,13 +90,15 @@ namespace iMotionsImportTools.Sensor
             }
         }
 
-   
-
+        public FibaroJson GetDeviceInfo(int deviceId)
+        {
+            return _data[deviceId];
+        }
         
 
         public void OnScheduledEvent(object sender, SchedulerEventArgs args)
         {
-            _scheduledFrozenData = new Dictionary<int, string>(_data);
+            _scheduledFrozenData = new Dictionary<int, FibaroJson>(_data);
         }
 
         

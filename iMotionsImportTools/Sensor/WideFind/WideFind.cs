@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using iMotionsImportTools.Controller;
 using iMotionsImportTools.iMotionsProtocol;
-using iMotionsImportTools.ImportFunctions;
 using iMotionsImportTools.Scheduling;
 using Newtonsoft.Json;
 using Serilog;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
-namespace iMotionsImportTools.Sensor
+namespace iMotionsImportTools.Sensor.WideFind
 {
     
         // TODO: 
@@ -18,9 +17,11 @@ namespace iMotionsImportTools.Sensor
 
         public class WideFind : MqttSensor, ITunneler, ISchedulable
         {
+            public const string REPORT = "REPORT";
+            public const string BEACON = "BEACON";
 
+            private WideFindJson _latestData;
 
-            private string _latestData;
             public string Tag { get; set; }
             private readonly List<string> _typeFilters;
 
@@ -28,7 +29,7 @@ namespace iMotionsImportTools.Sensor
             public event EventHandler<Sample> Transport;
      
 
-            private string _scheduledData;
+            private WideFindJson _scheduledData;
 
             public bool IsScheduled { get; set; }
 
@@ -53,7 +54,18 @@ namespace iMotionsImportTools.Sensor
             }
 
 
-           
+            public override string Status()
+            {
+                return $"WideFind MQTT Sensor\n" +
+                       $"--------------------" +
+                       $"Connected: '{IsConnected}'\n" +
+                       $"Started: '{IsStarted}'\n" +
+                       $"Tag: '{Tag}'\n" +
+                       $"Last message received: '{MessageReceivedWatch.Elapsed.Milliseconds}'ms ago\n" +
+                       $"Latest data: '{(_latestData == null ? "null" : _latestData.Message)}\n" +
+                       $"Time alive: '{DateTimeOffset.Now.ToUnixTimeMilliseconds() - TimeStarted}'\n" +
+                       $"-----------------------";
+            }
 
             public override void OnMessage(object sender, MqttMsgPublishEventArgs e)
             {
@@ -79,14 +91,15 @@ namespace iMotionsImportTools.Sensor
                 var type = typeAndId[0];
                 var id = typeAndId[1];
 
-                
+               
                 if (_typeFilters.Contains(type) && (Tag == id || Tag == "") )
                 {
                     
-                    _latestData = jsonData.Message;
+                    MessageReceivedWatch.Restart();
+                    _latestData = jsonData;
 
                    
-                    Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData);
+                    Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData.Message);
                     
 
                     if (!ShouldTunnel)
@@ -94,16 +107,16 @@ namespace iMotionsImportTools.Sensor
                         return;
                     }
 
-                    Log.Logger.Debug("{A}:{B} Tunneling message.");
+                    Log.Logger.Debug("{A}:{B} Tunneling message.", LogName, Tag);
 
                     var ev = Transport;
-                    ev?.Invoke(ev, VelPosSample.FromString(_latestData));
+                    //ev?.Invoke(ev, VelPosSample.FromString(_latestData));
                 }
                 
 
             }
 
-            public string GetData()
+            public WideFindJson GetData()
             {
                 return IsScheduled ? _scheduledData : _latestData;
         }

@@ -228,7 +228,7 @@ namespace iMotionsImportTools.Controller
                     {
                         sample.InsertSensorData(sensor); // let the sample add the data it wants
                         modifiedSamples.Add(sample);  // no duplicates due to HashSet
-                        Log.Logger.Debug("Exported from sensor '{A}'. Added data to sample '{B}", sensor.Id, sampleId);
+                        Log.Logger.Debug("Exported from sensor '{A}'. Added data to sample '{B}'", sensor.Id, sampleId);
                     }
                     catch (Exception e)
                     {
@@ -251,10 +251,7 @@ namespace iMotionsImportTools.Controller
                 };
 
                 // write the message string to an output device
-                Task.Run(async () =>
-                {
-                    await _client.Write(msg.ToString());
-                }, _globalToken);
+                _client.Write(msg.ToString());
             }
 
             // reset all samples to avoid stale data (this is why we copy above)
@@ -263,6 +260,14 @@ namespace iMotionsImportTools.Controller
                 sample.Reset();
             }
 
+        }
+
+        public void PrintSensorStatuses()
+        {
+            foreach (var sensor in _sensors)
+            {
+                Console.WriteLine(sensor.Sensor.Status());
+            }
         }
     }
 }

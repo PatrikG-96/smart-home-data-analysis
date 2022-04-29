@@ -40,6 +40,21 @@ namespace iMotionsImportTools.Network
             ServicePointManager.FindServicePoint(new Uri(url)).ConnectionLimit = max; 
         }
 
+        public CircuitBreaker CircuitBreaker()
+        {
+            return _circuitBreaker;
+        }
+
+        public void SetTimeout(int millis)
+        {
+            _client.Timeout = TimeSpan.FromMilliseconds(millis);
+        }
+
+        public int GetTimeout()
+        {
+            return _client.Timeout.Milliseconds;
+        }
+
         public async Task<string> MakeRequest(string route)
         {
             try
