@@ -262,12 +262,29 @@ namespace iMotionsImportTools.Controller
 
         }
 
-        public void PrintSensorStatuses()
+        public List<SensorStatus> GetAllSensorStatuses()
         {
-            foreach (var sensor in _sensors)
+            var list = new List<SensorStatus>();
+            foreach (var sensorWrapper in _sensors)
             {
-                Console.WriteLine(sensor.Sensor.Status());
+                list.Add(sensorWrapper.Sensor.Status());
             }
+
+            return list;
+        }
+
+        public SensorStatus GetSensorStatus(string sensorId)
+        {
+            foreach (var sensorWrapper in _sensors)
+            {
+                Console.WriteLine("hej");
+                if (sensorWrapper.Sensor.Id == sensorId)
+                {
+                    return sensorWrapper.Sensor.Status();
+                }
+            }
+
+            return null;
         }
     }
 }

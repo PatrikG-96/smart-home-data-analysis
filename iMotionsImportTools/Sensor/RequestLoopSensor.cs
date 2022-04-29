@@ -38,7 +38,7 @@ namespace iMotionsImportTools.Sensor
 
         }
 
-        public override string Status()
+        public override SensorStatus Status()
         {
             throw new NotImplementedException();
         }

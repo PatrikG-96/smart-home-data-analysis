@@ -25,34 +25,7 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace iMotionsImportTools
 {
-    class MockClient : IClient
-    {
-        public Task Send(string data)
-        {
-            Console.WriteLine(data);
-            return new Task(() => Console.WriteLine(data));
-        }
-
-        public Task Send(string data, CancellationToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Send(byte[] data, CancellationToken token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task Connect(ServerInfo info, CancellationToken token)
-        {
-            await Console.Out.WriteAsync("hej");
-        }
-
-        public async Task Receive(CancellationToken token)
-        {
-            await Console.Out.WriteAsync("hej");
-        }
-    }
+    
     class Program
     {
         
@@ -100,14 +73,14 @@ namespace iMotionsImportTools
             //controller.AddSampleSensorSubscription("composite", "1");
             //controller.AddSampleSensorSubscription("composite", "2");
             //controller.AddSensor(fib);
-            controller.AddTunnel(1, wideFind);
+            //controller.AddTunnel(1, wideFind);
 
-            client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
+            //client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
             
-            Task.Run(async () =>
-            {
-                await client.Receive(CancellationToken.None);
-            });
+            //Task.Run(async () =>
+            //{
+            //    await client.Receive(CancellationToken.None);
+            //});
             controller.ConnectAll();
             controller.StartAll();
 

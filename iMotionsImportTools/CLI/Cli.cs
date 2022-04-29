@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using iMotionsImportTools.Controller;
 
 namespace iMotionsImportTools.CLI
@@ -12,12 +13,10 @@ namespace iMotionsImportTools.CLI
         public Cli(IMotionsController controller)
         {
             _controller = controller;
-            var command = new Command("status", args =>
-            {
-                _controller.PrintSensorStatuses();
-            });
+           
             _interpreter = new Interpreter();
-            _interpreter.AddCommand(command);
+           
+            _interpreter.AddCommand(new Status());
         }
 
         public void Start()
@@ -29,7 +28,7 @@ namespace iMotionsImportTools.CLI
                 var input = Console.ReadLine();
                 if (input == null) continue;
                 string[] splitBySpace = input.Split(' ');
-                _interpreter.Interpret(splitBySpace[0], splitBySpace);
+                _interpreter.Interpret(splitBySpace[0], splitBySpace.Skip(1).ToArray(), _controller);
             }
 
         }

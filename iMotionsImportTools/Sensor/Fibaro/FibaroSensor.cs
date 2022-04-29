@@ -56,7 +56,7 @@ namespace iMotionsImportTools.Sensor
             RemoveTopic(BaseTopic + deviceId + "/#");
         }
 
-        public override string Status()
+        public override SensorStatus Status()
         {
             throw new NotImplementedException();
         }

@@ -54,17 +54,24 @@ namespace iMotionsImportTools.Sensor.WideFind
             }
 
 
-            public override string Status()
+            public override SensorStatus Status()
             {
-                return $"WideFind MQTT Sensor\n" +
-                       $"--------------------" +
-                       $"Connected: '{IsConnected}'\n" +
-                       $"Started: '{IsStarted}'\n" +
-                       $"Tag: '{Tag}'\n" +
-                       $"Last message received: '{MessageReceivedWatch.Elapsed.Milliseconds}'ms ago\n" +
-                       $"Latest data: '{(_latestData == null ? "null" : _latestData.Message)}\n" +
-                       $"Time alive: '{DateTimeOffset.Now.ToUnixTimeMilliseconds() - TimeStarted}'\n" +
-                       $"-----------------------";
+                var status = new SensorStatus
+                {
+                    Name = "WideFind",
+                    IsConnected = IsConnected,
+                    IsStarted = IsStarted,
+                    Id = Id,
+                    LastMessage = _latestData?.Message,
+                    TimeSinceLastMessage = MessageReceivedWatch.ElapsedMilliseconds,
+                    TimeAlive = DateTimeOffset.Now.ToUnixTimeMilliseconds() - TimeStarted,
+                    Optional =
+                    {
+                        ["Tag"] = Tag
+                    }
+                };
+
+                return status;
             }
 
             public override void OnMessage(object sender, MqttMsgPublishEventArgs e)

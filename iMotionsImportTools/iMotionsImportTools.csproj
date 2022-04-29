@@ -60,7 +60,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLI\Cli.cs" />
-    <Compile Include="CLI\Command.cs" />
+    <Compile Include="CLI\Commands\ICommand.cs" />
+    <Compile Include="CLI\Commands\Status.cs" />
+    <Compile Include="CLI\Format\Attribute.cs" />
+    <Compile Include="CLI\Format\Formatter.cs" />
+    <Compile Include="CLI\Format\OutputBuilder.cs" />
+    <Compile Include="CLI\Format\Style.cs" />
     <Compile Include="CLI\Interpreter.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Controller\ITunneler.cs" />
@@ -93,6 +98,7 @@
     <Compile Include="Network\ApiService.cs" />
     <Compile Include="Sensor\Fibaro\FibaroSensor.cs" />
     <Compile Include="Sensor\RequestLoopSensor.cs" />
+    <Compile Include="Sensor\SensorStatus.cs" />
     <Compile Include="Sensor\WideFind\WideFindJson.cs" />
     <Compile Include="Sensor\WideFind\WideFindMessage.cs" />
     <Compile Include="Utilities\HighResolutionTimer.cs" />

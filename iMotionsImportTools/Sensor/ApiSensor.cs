@@ -57,6 +57,6 @@ namespace iMotionsImportTools.Sensor
             IsStarted = false;
         }
 
-        public abstract string Status();
+        public abstract SensorStatus Status();
     }
 }

@@ -20,7 +20,7 @@
 
         void Stop();
 
-        string Status();
+        SensorStatus Status();
 
     }
 }
