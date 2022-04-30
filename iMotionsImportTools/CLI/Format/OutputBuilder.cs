@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 
 namespace iMotionsImportTools.CLI
 {
@@ -77,9 +78,9 @@ namespace iMotionsImportTools.CLI
             
             if (ActiveStyle.BoxedTitle)
             {
-                output += Formatter.MakeLine(ActiveStyle.LineEnds, ActiveStyle.LinePad, lineLength);
-                output += Formatter.PadAndCenter(attr.Value, ActiveStyle.TitlePad, ActiveStyle.Edge, lineLength);
-                output += Formatter.MakeLine(ActiveStyle.LineEnds, ActiveStyle.LinePad, lineLength);
+                output += Formatter.MakeLine(ActiveStyle.LineEnds, ActiveStyle.LinePad, lineLength) + "\n";
+                output += Formatter.PadAndCenter(attr.Value, ActiveStyle.TitlePad, ActiveStyle.Edge, lineLength) + "\n";
+                output += Formatter.MakeLine(ActiveStyle.LineEnds, ActiveStyle.LinePad, lineLength) + "\n";
             }
             else
             {
@@ -89,7 +90,24 @@ namespace iMotionsImportTools.CLI
 
         private void BuildAttribute(Attribute attr)
         {
+            switch (ActiveStyle.KeyAlign)
+            {
+                case Style.LEFT:
 
+                    if (ActiveStyle.KeyValueDelimiterAlign == Style.LONGEST_KEY_MATCH)
+                    {
+                        output += ActiveStyle.Edge + Formatter.PadAndLeftAlign(attr.Key, ActiveStyle.AttributePad,
+                            longestAttributeString); 
+                    }
+                    
+                    break;
+                case Style.CENTER:
+                    break;
+                case Style.RIGHT:
+                    break;
+            }
+
+            
         }
 
     }

@@ -17,6 +17,8 @@ namespace iMotionsImportTools.CLI
             _interpreter = new Interpreter();
            
             _interpreter.AddCommand(new Status());
+
+            
         }
 
         public void Start()
