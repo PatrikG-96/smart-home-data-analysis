@@ -1,14 +1,10 @@
-﻿using System;
-using iMotionsImportTools.Controller;
-
-namespace iMotionsImportTools.CLI
+﻿namespace iMotionsImportTools.CLI.Commands
 {
     public interface ICommand
     {
         
-        string Keyword { get; }
+        string KeyWord { get; set; }
 
-        void Action(IMotionsController controller, string[] args);
 
     }
 }

@@ -62,7 +62,7 @@ namespace iMotionsImportTools
             var controller = new IMotionsController(stdout,  CancellationToken.None);
             controller.ScheduleExports(new IntervalScheduler(500));
             controller.AddSensor(wideFind);
-            //controller.AddSensor(fib);
+            controller.AddSensor(fib);
             //controller.AddSample("Pos", sample);
             //controller.AddSample("Vel", sample2);
             //controller.AddSample("Fib", sample3);

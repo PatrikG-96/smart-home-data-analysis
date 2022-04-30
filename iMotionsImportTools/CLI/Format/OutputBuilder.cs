@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 
 namespace iMotionsImportTools.CLI
@@ -17,7 +18,7 @@ namespace iMotionsImportTools.CLI
 
         private string output;
 
-        public OutputBuilder(int lineLength)
+        public OutputBuilder()
         {
             _attributes = new List<Attribute>();
             longestAttributeString = 0;
@@ -37,6 +38,7 @@ namespace iMotionsImportTools.CLI
         public void AddAttribute(string name)
         {
             longestAttributeString = name.Length > longestAttributeString ? name.Length : longestAttributeString;
+            lineLength = longestAttributeString + ActiveStyle.MinValueSpace + (ActiveStyle.Boxed ? 2 : 0);
             _attributes.Add(new Attribute
             {
                 Key = name
@@ -65,11 +67,12 @@ namespace iMotionsImportTools.CLI
                 }
                 else
                 {
-                    
+                    BuildAttribute(attribute);
                 }
             }
-
-            return output;
+            var result = output + Formatter.MakeLine(ActiveStyle.LineEnds, ActiveStyle.LinePad, lineLength);
+            output = "";
+            return result;
         }
 
         private void BuildTitle(Attribute attr)
@@ -90,14 +93,30 @@ namespace iMotionsImportTools.CLI
 
         private void BuildAttribute(Attribute attr)
         {
+            string attrString = "";
             switch (ActiveStyle.KeyAlign)
             {
                 case Style.LEFT:
-
+                    
                     if (ActiveStyle.KeyValueDelimiterAlign == Style.LONGEST_KEY_MATCH)
                     {
-                        output += ActiveStyle.Edge + Formatter.PadAndLeftAlign(attr.Key, ActiveStyle.AttributePad,
-                            longestAttributeString); 
+                        attrString += ActiveStyle.Edge + Formatter.PadAndLeftAlign(attr.Key, ActiveStyle.AttributePad,
+                            longestAttributeString) + ActiveStyle.AttributePad + ActiveStyle.KeyValueDelimiter + ActiveStyle.AttributePad; 
+                    }
+                    
+                    switch (ActiveStyle.ValueAlign)
+                    {
+                        case Style.INLINE:
+
+                            attrString += Formatter.PadAndLeftAlign(ValueWrap(attrString, attr.Value),' ', lineLength-attrString.Length-1) + (ActiveStyle.Boxed ? new string(ActiveStyle.Edge, 1) : "");
+
+                            break;
+                        case Style.LEFT:
+                            break;
+                        case Style.RIGHT:
+                            break;
+                        default:
+                            throw new Exception("Value Align error");
                     }
                     
                     break;
@@ -107,7 +126,42 @@ namespace iMotionsImportTools.CLI
                     break;
             }
 
-            
+
+            output += attrString + "\n";
+
+
+        }
+
+        private string ValueWrap(string attrString, string value, bool wrapping = false)
+        {
+            if (attrString.Length + value.Length > lineLength - (ActiveStyle.Boxed ? 1 : 0) && ActiveStyle.ValueWrap)
+            {
+
+                switch (ActiveStyle.ValueWrapStrategy)
+                {
+                    case Style.INLINE:
+
+                        int currentLength = attrString.Length;
+
+                        int valueSpace = lineLength - currentLength - (ActiveStyle.Boxed ? 1 : 0);
+
+                        string valueInRow = value.Substring(0, valueSpace) + (ActiveStyle.Boxed ? new string(ActiveStyle.Edge,1) : "");
+
+                        if (wrapping) valueInRow = new string(ActiveStyle.Edge, 1) + valueInRow;
+
+                        return valueInRow + "\n" + ValueWrap((ActiveStyle.Boxed ? new string(ActiveStyle.Edge, 1) : ""),
+                            value.Substring(valueSpace), true);
+
+                       
+                    case Style.BELOW:
+                        return "";
+                      
+                }
+
+            }
+            if (wrapping)
+                return attrString + Formatter.PadAndRightAlign(value, ActiveStyle.AttributePad, lineLength - ActiveStyle.MinValueSpace);
+            return value;
         }
 
     }

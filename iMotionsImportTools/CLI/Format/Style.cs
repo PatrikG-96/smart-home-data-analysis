@@ -52,7 +52,7 @@ namespace iMotionsImportTools.CLI
             set
             {
                 if (!(value == LEFT || value == RIGHT || value == CENTER)) throw new Exception("Invalid alignment");
-                titleAlign = value;
+                keyAlign = value;
             }
         }
 
@@ -62,7 +62,7 @@ namespace iMotionsImportTools.CLI
             set
             {
                 if (!(value == LEFT || value == RIGHT || value == CENTER || value == INLINE)) throw new Exception("Invalid alignment");
-                titleAlign = value;
+                valueAlign = value;
             }
         }
 
@@ -72,7 +72,7 @@ namespace iMotionsImportTools.CLI
             set
             {
                 if (!(value == INLINE || value == CENTER || value == LONGEST_KEY_MATCH)) throw new Exception("Invalid alignment");
-                titleAlign = value;
+                keyValueDelimAlign = value;
             }
         }
 
@@ -82,7 +82,7 @@ namespace iMotionsImportTools.CLI
             set
             {
                 if (!(value == INLINE || value == BELOW)) throw new Exception("Invalid alignment");
-                titleAlign = value;
+                valueWrapStrategy = value;
             }
         }
 
@@ -102,7 +102,7 @@ namespace iMotionsImportTools.CLI
                 ValueAlign = INLINE,
                 ValueWrap = true,
                 ValueWrapStrategy = INLINE,
-                MinValueSpace = 10,
+                MinValueSpace = 15,
                 TitlePad = ' ',
                 AttributePad = ' '
             };

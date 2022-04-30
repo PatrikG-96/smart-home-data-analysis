@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using iMotionsImportTools.Controller;
 
 namespace iMotionsImportTools.CLI
@@ -6,14 +7,14 @@ namespace iMotionsImportTools.CLI
     public class Interpreter
     {
 
-        private readonly List<ICommand> _commands;
+        private readonly List<Command> _commands;
 
         public Interpreter()
         {
-            _commands = new List<ICommand>();
+            _commands = new List<Command>();
         }
 
-        public void AddCommand(ICommand command)
+        public void AddCommand(Command command)
         {
             _commands.Add(command);
         }
@@ -24,7 +25,8 @@ namespace iMotionsImportTools.CLI
             {
                 if (command.Keyword == keyword)
                 {
-                    command.Action(controller, arguments);
+                   
+                    command.Function(controller, arguments, command.Builder);
                 }
             }
         }

@@ -58,7 +58,19 @@ namespace iMotionsImportTools.Sensor
 
         public override SensorStatus Status()
         {
-            throw new NotImplementedException();
+            var status = new SensorStatus
+            {
+                Name = "Fibaro",
+                IsConnected = IsConnected,
+                IsStarted = IsStarted,
+                Id = Id,
+                LastMessage = "Hej",
+                TimeSinceLastMessage = MessageReceivedWatch.ElapsedMilliseconds,
+                TimeAlive = DateTimeOffset.Now.ToUnixTimeMilliseconds() - TimeStarted,
+                
+            };
+
+            return status;
         }
 
 
