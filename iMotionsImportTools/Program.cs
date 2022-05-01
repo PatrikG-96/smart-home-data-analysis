@@ -59,34 +59,35 @@ namespace iMotionsImportTools
             var sample3 = new FibaroEntranceSample();
             var composite = new PosxAndDoorTemp();
 
-            var controller = new IMotionsController(stdout,  CancellationToken.None);
-            controller.ScheduleExports(new IntervalScheduler(500));
+            var controller = new IMotionsController(client,  CancellationToken.None);
+            controller.ScheduleExports(new IntervalScheduler(100));
             controller.AddSensor(wideFind);
-            controller.AddSensor(fib);
+            //controller.AddSensor(fib);
             //controller.AddSample("Pos", sample);
-            //controller.AddSample("Vel", sample2);
+            controller.AddSample("Vel", sample2);
             //controller.AddSample("Fib", sample3);
             //controller.AddSample("composite", composite);
             //controller.AddSampleSensorSubscription("Pos", "1");
-            //controller.AddSampleSensorSubscription("Vel", "1");
+            controller.AddSampleSensorSubscription("Vel", "1");
             //controller.AddSampleSensorSubscription("Fib", "2");
             //controller.AddSampleSensorSubscription("composite", "1");
             //controller.AddSampleSensorSubscription("composite", "2");
             //controller.AddSensor(fib);
             //controller.AddTunnel(1, wideFind);
 
-            //client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
+            client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
             
-            //Task.Run(async () =>
-            //{
-            //    await client.Receive(CancellationToken.None);
-            //});
+            Task.Run(async () =>
+            {
+                await client.Receive(CancellationToken.None);
+            });
+
             controller.ConnectAll();
             controller.StartAll();
 
-            var cli = new Cli(controller);
-            cli.Start();
-
+            //var cli = new Cli(controller);
+            //cli.Start();
+            Console.ReadKey();
         }
 
      

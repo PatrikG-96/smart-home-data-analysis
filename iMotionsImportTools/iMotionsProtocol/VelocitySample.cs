@@ -40,7 +40,7 @@ namespace iMotionsImportTools.iMotionsProtocol
         {
             if (sensor is WideFind wideFind)
             {
-                Console.WriteLine("Inserting");
+                
                 var json = wideFind.GetData();
 
                 if (json == null)
@@ -48,7 +48,7 @@ namespace iMotionsImportTools.iMotionsProtocol
                     
                     return;
                 }
-                Console.WriteLine("Inserting");
+               
                 var msg = json.ParseMessage();
                 
                 VelX = msg.VelX;

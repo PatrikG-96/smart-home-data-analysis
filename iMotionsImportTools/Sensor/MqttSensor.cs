@@ -81,10 +81,10 @@ namespace iMotionsImportTools.Sensor
             {
                 if (username != null && password != null)
                 {
-                    //Client.Connect(clientId, username, password);
+                    Client.Connect(clientId, username, password);
                     return true;
                 }
-                //Client.Connect(clientId);
+                Client.Connect(clientId);
                 return true;
             }
             catch (Exception e)
