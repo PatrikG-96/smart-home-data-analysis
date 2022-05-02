@@ -19,8 +19,11 @@ namespace iMotionsImportTools.Sensor.WideFind
         {
             public const string REPORT = "REPORT";
             public const string BEACON = "BEACON";
+            public const string LTU_SYSTEM_TOPIC = "ltu-system/#";
 
             private WideFindJson _latestData;
+
+            public override string Data => _latestData == null ? "null" : _latestData.Message;
 
             public string Tag { get; set; }
             private readonly List<string> _typeFilters;
@@ -38,6 +41,7 @@ namespace iMotionsImportTools.Sensor.WideFind
                 _typeFilters = new List<string>();
                 Tag = "";
                 LogName += ":WideFind";
+                AddTopic(LTU_SYSTEM_TOPIC);
             }
 
             public void AddType(string typeName)
@@ -64,7 +68,7 @@ namespace iMotionsImportTools.Sensor.WideFind
                     Id = Id,
                     LastMessage = _latestData?.Message,
                     TimeSinceLastMessage = MessageReceivedWatch.ElapsedMilliseconds,
-                    TimeAlive = DateTimeOffset.Now.ToUnixTimeMilliseconds() - TimeStarted,
+                    TimeAlive = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
                     Optional =
                     {
                         ["Tag"] = Tag

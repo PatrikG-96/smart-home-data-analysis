@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using iMotionsImportTools.Network;
 
 namespace iMotionsImportTools.Sensor
@@ -31,6 +32,9 @@ namespace iMotionsImportTools.Sensor
 
         public string Id { get; set; }
         public bool IsStarted { get; private set; }
+        public Stopwatch MessageReceivedWatch { get; }
+        public Stopwatch TimeAliveWatch { get; }
+        public string Data { get; }
         public bool IsConnected { get; private set; }
 
         public bool Connect(string username = null, string password = null)

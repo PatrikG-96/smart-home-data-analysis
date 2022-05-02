@@ -31,6 +31,20 @@ namespace iMotionsImportTools.Sensor
         private readonly Dictionary<int, FibaroJson> _data;
         private Dictionary<int, FibaroJson> _scheduledFrozenData;
 
+        public override string Data
+        {
+            get
+            {
+                string s = "";
+                foreach (var pair in _data)
+                {
+                    s += pair.Value.ToString() + ", ";
+                }
+
+                return s;
+            }
+        }
+
         public bool ShouldTunnel { get; set; }
         public event EventHandler<Sample> Transport;
 
@@ -66,7 +80,7 @@ namespace iMotionsImportTools.Sensor
                 Id = Id,
                 LastMessage = "Hej",
                 TimeSinceLastMessage = MessageReceivedWatch.ElapsedMilliseconds,
-                TimeAlive = DateTimeOffset.Now.ToUnixTimeMilliseconds() - TimeStarted,
+                TimeAlive = DateTimeOffset.Now.ToUnixTimeMilliseconds() ,
                 
             };
 
@@ -90,6 +104,7 @@ namespace iMotionsImportTools.Sensor
                     Console.WriteLine("Ugly shit");
                     return;
                 }
+                MessageReceivedWatch.Restart();
                 _data[jsonData.Id] = jsonData;
 
 

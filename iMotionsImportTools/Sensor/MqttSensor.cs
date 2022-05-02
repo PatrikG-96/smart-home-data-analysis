@@ -12,9 +12,6 @@ namespace iMotionsImportTools.Sensor
     public abstract class MqttSensor : ISensor, ILogEntity
     {
 
-        protected Stopwatch MessageReceivedWatch;
-        protected long TimeStarted;
-
         public string BaseTopic { get; set; }
 
         protected MqttClient Client;
@@ -24,7 +21,11 @@ namespace iMotionsImportTools.Sensor
 
         public string Id { get; set; }
         public bool IsStarted { get; private set; }
+        public Stopwatch MessageReceivedWatch { get; private set; }
+        public Stopwatch TimeAliveWatch { get; private set; }
         public string LogName { get; set; }
+
+        public abstract string Data { get; }
 
         public bool IsConnected => Client.IsConnected;
 
@@ -44,7 +45,7 @@ namespace iMotionsImportTools.Sensor
         {
             if (IsStarted)
             {
-                Console.WriteLine("Sensor already started");
+                Console.WriteLine("Handle already started");
                 return;
             }
 
@@ -56,7 +57,7 @@ namespace iMotionsImportTools.Sensor
             Client.Subscribe(_topics.ToArray(), _qos.ToArray());
             IsStarted = true;
             MessageReceivedWatch = Stopwatch.StartNew();
-            TimeStarted = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            
         }
 
         public void Stop()
@@ -67,7 +68,8 @@ namespace iMotionsImportTools.Sensor
             }
             Client.Unsubscribe(_topics.ToArray());
             IsStarted = false;
-
+            MessageReceivedWatch.Stop();
+            
         }
 
         public abstract SensorStatus Status();
@@ -81,10 +83,12 @@ namespace iMotionsImportTools.Sensor
             {
                 if (username != null && password != null)
                 {
-                    Client.Connect(clientId, username, password);
+                    //Client.Connect(clientId, username, password);
+                    TimeAliveWatch = Stopwatch.StartNew();
                     return true;
                 }
-                Client.Connect(clientId);
+                //Client.Connect(clientId);
+                TimeAliveWatch = Stopwatch.StartNew();
                 return true;
             }
             catch (Exception e)
@@ -99,6 +103,7 @@ namespace iMotionsImportTools.Sensor
             try
             {
                 Client.Disconnect();
+                TimeAliveWatch.Stop();
                 return true;
             }
             catch (Exception e)

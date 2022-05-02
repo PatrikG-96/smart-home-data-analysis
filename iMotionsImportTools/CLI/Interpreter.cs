@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using iMotionsImportTools.CLI.Commands;
 using iMotionsImportTools.Controller;
 
 namespace iMotionsImportTools.CLI
@@ -7,14 +8,14 @@ namespace iMotionsImportTools.CLI
     public class Interpreter
     {
 
-        private readonly List<Command> _commands;
+        private readonly List<ICommand> _commands;
 
         public Interpreter()
         {
-            _commands = new List<Command>();
+            _commands = new List<ICommand>();
         }
 
-        public void AddCommand(Command command)
+        public void AddCommand(ICommand command)
         {
             _commands.Add(command);
         }
@@ -23,10 +24,10 @@ namespace iMotionsImportTools.CLI
         {
             foreach (var command in _commands)
             {
-                if (command.Keyword == keyword)
+                if (command.KeyWord == keyword)
                 {
-                   
-                    command.Function(controller, arguments, command.Builder);
+                   Console.WriteLine("Found command");
+                    command.ExecuteCommand(controller, arguments);
                 }
             }
         }

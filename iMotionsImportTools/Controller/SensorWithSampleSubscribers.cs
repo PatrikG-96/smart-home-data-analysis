@@ -6,12 +6,12 @@ namespace iMotionsImportTools.Controller
     public class SensorWithSampleSubscribers
     {
         
-        public ISensor Sensor { get; private set; }
+        public SensorHandle Handle { get; private set; }
         public List<string> SubscriberIds { get; }
 
         public SensorWithSampleSubscribers(ISensor sensor)
         {
-            Sensor = sensor;
+            Handle = new SensorHandle(sensor);
             SubscriberIds = new List<string>();
         }
 

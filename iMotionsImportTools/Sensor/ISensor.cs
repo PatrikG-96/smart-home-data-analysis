@@ -1,4 +1,8 @@
-﻿namespace iMotionsImportTools.Sensor
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+
+namespace iMotionsImportTools.Sensor
 {
 
     //TODO:
@@ -9,6 +13,9 @@
         string Id { get; set; }
         bool IsStarted { get;}
 
+        Stopwatch MessageReceivedWatch { get; }
+        Stopwatch TimeAliveWatch { get; }
+        string Data { get; }
 
         bool IsConnected { get; }
 

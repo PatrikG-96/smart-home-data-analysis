@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using iMotionsImportTools.CLI.Commands;
 using iMotionsImportTools.Controller;
+using iMotionsImportTools.iMotionsProtocol;
+using iMotionsImportTools.Output;
+using iMotionsImportTools.Sensor;
+using iMotionsImportTools.Sensor.WideFind;
 
 namespace iMotionsImportTools.CLI
 {
@@ -8,45 +14,23 @@ namespace iMotionsImportTools.CLI
     {
 
         private IMotionsController _controller;
+        private List<ISensor> _sensors;
+        private List<IOutputDevice> _outputDevices;
+        private List<Sample> _samples;
         private Interpreter _interpreter;
 
         public Cli(IMotionsController controller)
         {
             _controller = controller;
-           
+            _sensors = new List<ISensor>();
+            _outputDevices = new List<IOutputDevice>();
+            _samples = new List<Sample>();
             _interpreter = new Interpreter();
 
-            var build = new OutputBuilder();
-            build.AddTitle("title");
-            build.AddAttribute("ID");
-            build.AddAttribute("Connected");
-            build.AddAttribute("Started");
-            build.AddAttribute("Time Alive");
-            build.AddAttribute("Last message");
-            build.AddAttribute("Current message");
-            var command = new Command("status", build, (ctrlr, args, builder) =>
-            {
-                
-                if (args.Length == 0)
-                {
-                   
-                    var statuses = ctrlr.GetAllSensorStatuses();
-
-                    foreach (var status in statuses)
-                    {
-                        builder.BindValue("title", status.Name);
-                        builder.BindValue("ID", status.Id);
-                        builder.BindValue("Connected", status.IsConnected.ToString());
-                        builder.BindValue("Started", status.IsStarted.ToString());
-                        builder.BindValue("Time Alive", status.TimeAlive.ToString());
-                        builder.BindValue("Last message", status.TimeSinceLastMessage.ToString());
-                        builder.BindValue("Current message", "REPORT:{tag},0.2.7,4500,0,1340,-20.45,10.94,1.00,4.09,13.12,1556123*U6DF");
-                        Console.WriteLine(builder.Build());
-                    }
-                }
-            });
-
-            _interpreter.AddCommand(command);
+            _interpreter.AddCommand(new SensorCmd(_sensors));
+            _interpreter.AddCommand(new ControllerCmd());
+            _interpreter.AddCommand(new OutputCmd(_outputDevices));
+            _interpreter.AddCommand(new SampleCmd(_samples));
 
         }
 
@@ -60,6 +44,19 @@ namespace iMotionsImportTools.CLI
                 if (input == null) continue;
                 string[] splitBySpace = input.Split(' ');
                 _interpreter.Interpret(splitBySpace[0], splitBySpace.Skip(1).ToArray(), _controller);
+
+                foreach (var sensor in _sensors)
+                {
+                    if (sensor is WideFind wide)
+                    {
+                        Console.WriteLine($"WideFind, Id={wide.Id}, Tag={wide.Tag}");
+                    }
+
+                    if (sensor is FibaroSensor fib)
+                    {
+                        Console.WriteLine($"Fibaro, Id={fib.Id}");
+                    }
+                }
             }
 
         }

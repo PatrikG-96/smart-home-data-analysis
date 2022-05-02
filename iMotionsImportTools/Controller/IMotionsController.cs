@@ -27,7 +27,8 @@ namespace iMotionsImportTools.Controller
 
         private IScheduler _scheduler;
 
-
+        public bool IsStarted { get; private set; }
+        public bool IsConnected { get; private set; }
         public IMotionsController(IOutputDevice client, CancellationToken token)
         {
             _client = client;
@@ -39,6 +40,26 @@ namespace iMotionsImportTools.Controller
             _schedulers = new Dictionary<string, IScheduler>();
         }
 
+        public IMotionsController(CancellationToken token)
+        {
+            _globalToken = token;
+
+            _samples = new Dictionary<string, Sample>();
+            _sensors = new List<SensorWithSampleSubscribers>();
+            _tunnels = new Dictionary<int, Tunnel>();
+            _schedulers = new Dictionary<string, IScheduler>();
+        }
+
+        public void SetOutputDevice(IOutputDevice device)
+        {
+            _client = device;
+        }
+
+        public string GetActiveOutputDeviceId()
+        {
+            return _client.Id;
+        }
+
         public void ScheduleExports(IScheduler scheduler)
         {
             _scheduler = scheduler;
@@ -48,25 +69,32 @@ namespace iMotionsImportTools.Controller
 
         public void ConnectAll()
         {
+            if (_client == null) return;
+
             foreach (var sensorWrapper in _sensors)
             {
-                if (!sensorWrapper.Sensor.Connect()) Log.Logger.Warning("Failed to connected sensor '{A}'", sensorWrapper.Sensor.Id);
+                if (!sensorWrapper.Handle.Sensor.Connect()) Log.Logger.Warning("Failed to connected sensor '{A}'", sensorWrapper.Handle.Id);
             }
+
+            IsConnected = true;
         }
 
         public void DisconnectAll()
         {
+            if (_client == null) return;
             foreach (var sensorWrapper in _sensors)
             {
-                sensorWrapper.Sensor.Disconnect();
+                sensorWrapper.Handle.Sensor.Disconnect();
             }
+            IsConnected = false;
         }
 
         public void StartAll()
         {
+            if (_client == null) return;
             foreach (var sensorWrapper in _sensors)
             {
-                sensorWrapper.Sensor.Start();
+                sensorWrapper.Handle.Sensor.Start();
             }
 
             foreach (var pair in _schedulers)
@@ -74,19 +102,22 @@ namespace iMotionsImportTools.Controller
                 pair.Value.Start();
             }
             _scheduler?.Start();
+            IsStarted = true;
         }
 
         public void StopAll()
         {
+            if (_client == null) return;
             foreach (var sensorWrapper in _sensors)
             {
-                sensorWrapper.Sensor.Stop();
+                sensorWrapper.Handle.Sensor.Stop();
             }
             foreach (var pair in _schedulers)
             {
                 pair.Value.Stop();
             }
             _scheduler?.Stop();
+            IsStarted = false;
         }
         public void AddTunnel(int id, ITunneler tunneler)
         {
@@ -126,16 +157,29 @@ namespace iMotionsImportTools.Controller
 
         public void AddSensor(ISensor sensor)
         {
+            Console.WriteLine("Adding sensor");
             _sensors.Add(new SensorWithSampleSubscribers(sensor));
+        }
+
+        public void RemoveSensor(ISensor sensor)
+        {
+            foreach (var sensorSub in _sensors)
+            {
+                if (sensorSub.Handle.Sensor.Id == sensor.Id)
+                {
+                    _sensors.Remove(sensorSub);
+                    return;
+                }
+            }
         }
 
         public ISensor GetSensor(string id)
         {
             foreach (var sensorWrapper in _sensors)
             {
-                if (sensorWrapper.Sensor.Id == id)
+                if (sensorWrapper.Handle.Id == id)
                 {
-                    return sensorWrapper.Sensor;
+                    return sensorWrapper.Handle.Sensor;
                 }
             }
 
@@ -163,6 +207,7 @@ namespace iMotionsImportTools.Controller
 
         public void Quit()
         {
+            if (_client == null) return;
             StopAll();
             DisconnectAll();
             // scuffed fix later
@@ -190,45 +235,49 @@ namespace iMotionsImportTools.Controller
         {
             foreach (var sensorWrapper in _sensors)
             {
-                if (sensorWrapper.Sensor.Id == sensorId)
+                if (sensorWrapper.Handle.Id == sensorId)
                 {
+                    if (!_samples.ContainsKey(sampleId)) throw new Exception();
                     sensorWrapper.AddSubscribingSample(sampleId);
                     return;
                 }
             }
+
+            throw new Exception();
         }
 
         public void RemoveSampleSensorSubscription(string sampleId, string sensorId)
         {
             foreach (var sensorWrapper in _sensors)
             {
-                if (sensorWrapper.Sensor.Id == sensorId)
+                if (sensorWrapper.Handle.Id == sensorId)
                 {
                     sensorWrapper.RemoveSubscribingSample(sampleId);
                     return;
                 }
             }
+            throw new Exception();
         }
 
         // Called by the scheduler.
         private void ExportAll(object sender, SchedulerEventArgs args)
         {
-
+            if (_client == null) return;
             Log.Logger.Debug("Exporting...");
 
             var modifiedSamples = new HashSet<Sample>(); // To keep track of samples that have actually been modified
 
             foreach (var sensorWrapper in _sensors)
             {
-                var sensor = sensorWrapper.Sensor;
+                var handle = sensorWrapper.Handle;
                 foreach (var sampleId in sensorWrapper.SubscriberIds) // for each sample that is subscribed to this sensor
                 {
                     var sample = _samples[sampleId];
                     try
                     {
-                        sample.InsertSensorData(sensor); // let the sample add the data it wants
+                        sample.InsertSensorData(handle.Sensor); // let the sample add the data it wants
                         modifiedSamples.Add(sample);  // no duplicates due to HashSet
-                        Log.Logger.Debug("Exported from sensor '{A}'. Added data to sample '{B}'", sensor.Id, sampleId);
+                        Log.Logger.Debug("Exported from sensor '{A}'. Added data to sample '{B}'", handle.Id, sampleId);
                     }
                     catch (Exception e)
                     {
@@ -262,25 +311,25 @@ namespace iMotionsImportTools.Controller
 
         }
 
-        public List<SensorStatus> GetAllSensorStatuses()
+        public List<SensorHandle> GetAllHandles()
         {
-            var list = new List<SensorStatus>();
-            foreach (var sensorWrapper in _sensors)
+            var list = new List<SensorHandle>();
+            foreach (var s in _sensors)
             {
-                list.Add(sensorWrapper.Sensor.Status());
+                list.Add(s.Handle);
             }
 
             return list;
         }
 
-        public SensorStatus GetSensorStatus(string sensorId)
+        public SensorHandle GetSensorHandle(string sensorId)
         {
             foreach (var sensorWrapper in _sensors)
             {
-                Console.WriteLine("hej");
-                if (sensorWrapper.Sensor.Id == sensorId)
+                
+                if (sensorWrapper.Handle.Id == sensorId)
                 {
-                    return sensorWrapper.Sensor.Status();
+                    return sensorWrapper.Handle;
                 }
             }
 

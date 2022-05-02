@@ -12,5 +12,11 @@
         public int Id { get; set; } = -1;
         public long Created { get; set; } = -1;
 
+        public new string ToString()
+        {
+            return
+                $"ID:{Id}, DeviceName:{DeviceName}, RoomName:{RoomName}, Timestamp:{Timestamp}, Created:{Created}, Value:{Value}";
+        }
+
     }
 }

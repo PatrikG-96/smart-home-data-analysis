@@ -60,8 +60,31 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLI\Cli.cs" />
-    <Compile Include="CLI\Command.cs" />
+    <Compile Include="CLI\Commands\ControllerCmd.cs" />
     <Compile Include="CLI\Commands\ICommand.cs" />
+    <Compile Include="CLI\Commands\OutputCmd.cs" />
+    <Compile Include="CLI\Commands\SampleCmd.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleAdd.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleCreate.cs" />
+    <Compile Include="CLI\Commands\Subcommands\OutputDelete.cs" />
+    <Compile Include="CLI\Commands\SensorCmd.cs" />
+    <Compile Include="CLI\Commands\Subcommands\ControllerConnect.cs" />
+    <Compile Include="CLI\Commands\Subcommands\ControllerDisconnect.cs" />
+    <Compile Include="CLI\Commands\Subcommands\ControllerStart.cs" />
+    <Compile Include="CLI\Commands\Subcommands\ControllerStop.cs" />
+    <Compile Include="CLI\Commands\Subcommands\OutputAvailable.cs" />
+    <Compile Include="CLI\Commands\Subcommands\OutputCreate.cs" />
+    <Compile Include="CLI\Commands\Subcommands\OutputSet.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleDelete.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleRemove.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleSubscribe.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleUnsubscribe.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorAdd.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorCreate.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorDelete.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorRemove.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorSetAttribute.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorStatus.cs" />
     <Compile Include="CLI\Format\Attribute.cs" />
     <Compile Include="CLI\Format\Formatter.cs" />
     <Compile Include="CLI\Format\OutputBuilder.cs" />
@@ -98,6 +121,7 @@
     <Compile Include="Network\ApiService.cs" />
     <Compile Include="Sensor\Fibaro\FibaroSensor.cs" />
     <Compile Include="Sensor\RequestLoopSensor.cs" />
+    <Compile Include="Sensor\SensorHandle.cs" />
     <Compile Include="Sensor\SensorStatus.cs" />
     <Compile Include="Sensor\WideFind\WideFindJson.cs" />
     <Compile Include="Sensor\WideFind\WideFindMessage.cs" />

@@ -6,6 +6,8 @@ namespace iMotionsImportTools.CLI
 {
     public class OutputBuilder
     {
+        public const int DEFAULT_LINE_LENGTH = 40;
+        public int MinLineLength { get; set; } = DEFAULT_LINE_LENGTH;
 
         public Style ActiveStyle { get; set; } = Style.DefaultStyle();
 
@@ -22,12 +24,13 @@ namespace iMotionsImportTools.CLI
         {
             _attributes = new List<Attribute>();
             longestAttributeString = 0;
+            lineLength = 60;
         }
 
         public void AddTitle(string name)
         {
             longestAttributeString = name.Length > longestAttributeString ? name.Length : longestAttributeString;
-            lineLength = longestAttributeString + ActiveStyle.MinValueSpace + (ActiveStyle.Boxed ? 2 : 0);
+            lineLength = Math.Max(longestAttributeString + ActiveStyle.MinValueSpace + (ActiveStyle.Boxed ? 2 : 0), MinLineLength);
             _attributes.Add(new Attribute
             {
                 IsTitle = true,
@@ -38,12 +41,13 @@ namespace iMotionsImportTools.CLI
         public void AddAttribute(string name)
         {
             longestAttributeString = name.Length > longestAttributeString ? name.Length : longestAttributeString;
-            lineLength = longestAttributeString + ActiveStyle.MinValueSpace + (ActiveStyle.Boxed ? 2 : 0);
+            lineLength = Math.Max(longestAttributeString + ActiveStyle.MinValueSpace + (ActiveStyle.Boxed ? 2 : 0), MinLineLength);
             _attributes.Add(new Attribute
             {
                 Key = name
             });
         }
+
 
         public void BindValue(string attrName, string attrValue)
         {
@@ -160,7 +164,7 @@ namespace iMotionsImportTools.CLI
 
             }
             if (wrapping)
-                return attrString + Formatter.PadAndRightAlign(value, ActiveStyle.AttributePad, lineLength - ActiveStyle.MinValueSpace);
+                return attrString + Formatter.PadAndRightAlign(value, ActiveStyle.AttributePad, lineLength - (attrString.Length+1));
             return value;
         }
 

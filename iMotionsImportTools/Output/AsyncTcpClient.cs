@@ -23,6 +23,8 @@ namespace iMotionsImportTools.Network
         public bool Connected => _client != null && _client.Connected;
         public bool Receiving { get; set; }
 
+        public string Id { get; set; }
+
         public string LogName { get; set; }
 
         // max and min buffer sizes?
@@ -150,6 +152,8 @@ namespace iMotionsImportTools.Network
         {
             Close();
         }
+
+        
 
         public void Write(string message)
         {

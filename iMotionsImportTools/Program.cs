@@ -38,7 +38,7 @@ namespace iMotionsImportTools
                 .WriteTo.File("my_log.log", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
-            var wideFind = new WideFind("1", "130.240.74.55");
+            /**var wideFind = new WideFind("1", "130.240.74.55");
             wideFind.AddTopic("ltu-system/#");
             wideFind.AddType(WideFind.REPORT);
             //wideFind.AddType("BEACON");
@@ -58,36 +58,37 @@ namespace iMotionsImportTools
             var sample2 = new VelocitySample();
             var sample3 = new FibaroEntranceSample();
             var composite = new PosxAndDoorTemp();
-
-            var controller = new IMotionsController(client,  CancellationToken.None);
+            **/
+            var controller = new IMotionsController(CancellationToken.None);
             controller.ScheduleExports(new IntervalScheduler(100));
+            /**
             controller.AddSensor(wideFind);
-            //controller.AddSensor(fib);
+            controller.AddSensor(fib);
             //controller.AddSample("Pos", sample);
-            controller.AddSample("Vel", sample2);
+            //controller.AddSample("Vel", sample2);
             //controller.AddSample("Fib", sample3);
             //controller.AddSample("composite", composite);
             //controller.AddSampleSensorSubscription("Pos", "1");
-            controller.AddSampleSensorSubscription("Vel", "1");
+            //controller.AddSampleSensorSubscription("Vel", "1");
             //controller.AddSampleSensorSubscription("Fib", "2");
             //controller.AddSampleSensorSubscription("composite", "1");
             //controller.AddSampleSensorSubscription("composite", "2");
             //controller.AddSensor(fib);
             //controller.AddTunnel(1, wideFind);
 
-            client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
+            /**client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
             
             Task.Run(async () =>
             {
                 await client.Receive(CancellationToken.None);
             });
+            **/
+            //controller.ConnectAll();
+            //controller.StartAll();
 
-            controller.ConnectAll();
-            controller.StartAll();
-
-            //var cli = new Cli(controller);
-            //cli.Start();
-            Console.ReadKey();
+            var cli = new Cli(controller);
+            cli.Start();
+            //Console.ReadKey();
         }
 
      

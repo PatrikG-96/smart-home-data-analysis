@@ -13,6 +13,8 @@ namespace iMotionsImportTools.Output
             _filename = filename;
         }
 
+        public string Id { get; set; }
+
         public void Write(string message)
         {
             Task.Run(async () =>

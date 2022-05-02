@@ -10,6 +10,7 @@ namespace iMotionsImportTools.iMotionsProtocol
     public abstract class Sample
     {
 
+        public string Id { get; set; }
         public string ParentSource { get; set; }
         public string SampleType { get; protected set;}
 
