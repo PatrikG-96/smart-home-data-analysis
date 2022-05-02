@@ -79,6 +79,14 @@ namespace iMotionsImportTools.CLI
             return result;
         }
 
+        public void Reset()
+        {
+            foreach (var attribute in _attributes)
+            {
+                attribute.Value = null;
+            }
+        }
+
         private void BuildTitle(Attribute attr)
         {
             if (!attr.IsTitle) return;
@@ -97,6 +105,7 @@ namespace iMotionsImportTools.CLI
 
         private void BuildAttribute(Attribute attr)
         {
+            if (attr.Value == null) return;
             string attrString = "";
             switch (ActiveStyle.KeyAlign)
             {

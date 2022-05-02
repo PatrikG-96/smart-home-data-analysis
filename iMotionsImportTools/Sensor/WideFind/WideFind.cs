@@ -42,6 +42,7 @@ namespace iMotionsImportTools.Sensor.WideFind
                 Tag = "";
                 LogName += ":WideFind";
                 AddTopic(LTU_SYSTEM_TOPIC);
+                _latestData = new WideFindJson();
             }
 
             public void AddType(string typeName)
@@ -107,10 +108,17 @@ namespace iMotionsImportTools.Sensor.WideFind
                 {
                     
                     MessageReceivedWatch.Restart();
-                    _latestData = jsonData;
+                    
+                    lock (_latestData)
+                    {
+                        _latestData = jsonData;
+                    }
+                    
+                    
+                    Console.WriteLine(_latestData.Message);
 
                    
-                    Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData.Message);
+                    Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData?.Message ?? "null");
                     
 
                     if (!ShouldTunnel)
@@ -121,7 +129,9 @@ namespace iMotionsImportTools.Sensor.WideFind
                     Log.Logger.Debug("{A}:{B} Tunneling message.", LogName, Tag);
 
                     var ev = Transport;
-                    //ev?.Invoke(ev, VelPosSample.FromString(_latestData));
+                    var sample = new VelocitySample();
+                    sample.InsertSensorData(this);
+                    ev?.Invoke(ev, sample);
                 }
                 
 
@@ -129,8 +139,9 @@ namespace iMotionsImportTools.Sensor.WideFind
 
             public WideFindJson GetData()
             {
-                return IsScheduled ? _scheduledData : _latestData;
-        }
+            //return IsScheduled ? _scheduledData : _latestData;
+                return _latestData?.Copy();
+            }
 
 
 

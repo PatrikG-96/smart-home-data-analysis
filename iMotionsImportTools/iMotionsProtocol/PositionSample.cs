@@ -16,7 +16,7 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public override string ToString()
         {
-            return $"{SampleType};{PosZ};{PosY};{PosX}";
+            return $"{SampleType};{PosX};{PosY};{PosZ}";
         }
 
         public override void Reset()
@@ -47,9 +47,9 @@ namespace iMotionsImportTools.iMotionsProtocol
                 }
 
                 var msg = json.ParseMessage();
-                PosX = msg.PosX;
-                PosY = msg.PosY;
-                PosZ = msg.PosZ;
+                PosX = msg?.PosX ?? "0";
+                PosY = msg?.PosY ?? "0";
+                PosZ = msg?.PosZ ?? "0";
             }
         }
     }

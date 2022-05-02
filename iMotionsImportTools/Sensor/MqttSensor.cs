@@ -25,6 +25,8 @@ namespace iMotionsImportTools.Sensor
         public Stopwatch TimeAliveWatch { get; private set; }
         public string LogName { get; set; }
 
+        public string Broker { get; }
+
         public abstract string Data { get; }
 
         public bool IsConnected => Client.IsConnected;
@@ -38,6 +40,7 @@ namespace iMotionsImportTools.Sensor
             Id = id;
             IsStarted = false;
             LogName = "MQTT";
+            Broker = brokerAddress;
 
         }
 
@@ -83,11 +86,11 @@ namespace iMotionsImportTools.Sensor
             {
                 if (username != null && password != null)
                 {
-                    //Client.Connect(clientId, username, password);
+                    Client.Connect(clientId, username, password);
                     TimeAliveWatch = Stopwatch.StartNew();
                     return true;
                 }
-                //Client.Connect(clientId);
+                Client.Connect(clientId);
                 TimeAliveWatch = Stopwatch.StartNew();
                 return true;
             }

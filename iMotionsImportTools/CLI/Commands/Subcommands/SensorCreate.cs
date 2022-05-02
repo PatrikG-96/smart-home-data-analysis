@@ -18,24 +18,47 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             KeyWord = "create";
             _sensors = sensors;
             _sensorTypes = new Dictionary<string, Func<string[], ISensor>>();
+            Builder = new OutputBuilder();
+            Builder.AddTitle("title");
+            Builder.AddAttribute("Command");
+            Builder.AddAttribute("Status");
+            Builder.AddAttribute("Type");
+            Builder.AddAttribute("ID");
+            Builder.AddAttribute("Broker");
+            Builder.AddAttribute("Error");
         }
         public void ExecuteCommand(IMotionsController controller, string[] args)
         {
-            
+            Builder.BindValue("title", "Sensor");
+            Builder.BindValue("Command", "Create");
             if (args.Length >= 2)
             {
-                Console.WriteLine("here");
+                
                 var type = args[0];
                 
 
                 if (!_sensorTypes.ContainsKey(type))
                 {
-                    Console.WriteLine("Type doesn't exist");
+                    Builder.BindValue("Status", "Failed");
+                    Builder.BindValue("Error", "Sensor type is invalid");
+                    Console.WriteLine(Builder.Build());
+                    Builder.Reset();
                     return;
                 }
                 
+                
                 var sensor = _sensorTypes[type](args.Skip(1).ToArray());
                 _sensors.Add(sensor);
+                Builder.BindValue("Status", "Success");
+                Builder.BindValue("Type", sensor.GetType().Name);
+                Builder.BindValue("ID", sensor.Id);
+
+                if (sensor is MqttSensor mqtt)
+                {
+                    Builder.BindValue("Broker", mqtt.Broker);
+                }
+                Console.WriteLine(Builder.Build());
+                Builder.Reset();
             }
         }
 

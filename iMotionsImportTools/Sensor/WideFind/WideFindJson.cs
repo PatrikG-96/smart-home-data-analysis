@@ -14,7 +14,7 @@ namespace iMotionsImportTools.Sensor
 
         public WideFindMessage ParseMessage()
         {
-            
+            if (Message == null) return null;
 
             var colonSeparated = Message.Substring(Message.IndexOf(':') + 1);
 
@@ -34,6 +34,18 @@ namespace iMotionsImportTools.Sensor
                 Timealive = separatedFields[WideFindMessage.TimealiveIndex]
             };
            
+        }
+
+        public WideFindJson Copy()
+        {
+            return new WideFindJson()
+            {
+                Host = Host,
+                Message = Message,
+                Source = Source,
+                Type = Type,
+                Time = Time
+            };
         }
     }
 }

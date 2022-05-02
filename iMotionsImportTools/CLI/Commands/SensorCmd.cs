@@ -30,7 +30,7 @@ namespace iMotionsImportTools.CLI.Commands
                     return null;
                 }
 
-                return new WideFind(s1[0], s1[0]);
+                return new WideFind(s1[0], s1[1]);
             });
             create.AddSensorType("fibaro", (s1) =>
             {

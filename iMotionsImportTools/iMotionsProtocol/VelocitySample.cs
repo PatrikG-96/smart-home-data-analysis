@@ -17,7 +17,7 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public override string ToString()
         {
-            return $"{SampleType};{VelZ};{VelY};{VelX}";
+            return $"{SampleType};{VelX};{VelY};{VelZ}";
         }
 
         public override void Reset()
@@ -51,9 +51,9 @@ namespace iMotionsImportTools.iMotionsProtocol
                
                 var msg = json.ParseMessage();
                 
-                VelX = msg.VelX;
-                VelY = msg.VelY;
-                VelZ = msg.VelZ;
+                VelX = msg?.VelX ?? "0";
+                VelY = msg?.VelY ?? "0";
+                VelZ = msg?.VelZ ?? "0";
 
             }
         }

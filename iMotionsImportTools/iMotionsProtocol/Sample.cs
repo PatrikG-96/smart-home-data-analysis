@@ -12,6 +12,8 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public string Id { get; set; }
         public string ParentSource { get; set; }
+
+        public string Instance { get; set; } = "";
         public string SampleType { get; protected set;}
 
         protected Sample(string sampleType)

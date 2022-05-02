@@ -157,7 +157,7 @@ namespace iMotionsImportTools.Controller
 
         public void AddSensor(ISensor sensor)
         {
-            Console.WriteLine("Adding sensor");
+            
             _sensors.Add(new SensorWithSampleSubscribers(sensor));
         }
 
@@ -296,6 +296,7 @@ namespace iMotionsImportTools.Controller
                     Source = sample.ParentSource,
                     Version = Message.DefaultVersion,
                     Type = Message.Event,
+                    Instance = sample.Instance,
                     Sample = sample.Copy() // to avoid race conditions when resetting samples
                 };
 

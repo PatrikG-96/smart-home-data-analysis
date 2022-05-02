@@ -40,6 +40,7 @@ namespace iMotionsImportTools.Controller
                 Source = sample.ParentSource, 
                 Type = Message.Event, 
                 Version = Message.DefaultVersion, 
+                Instance = "Tunneled",
                 Sample = sample.Copy() // to avoid race conditions
             }; 
             _client.Write(message.ToString());
