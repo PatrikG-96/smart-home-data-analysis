@@ -60,10 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CLI\Cli.cs" />
+    <Compile Include="CLI\Commands\ConfigCmd.cs" />
     <Compile Include="CLI\Commands\ControllerCmd.cs" />
     <Compile Include="CLI\Commands\ICommand.cs" />
     <Compile Include="CLI\Commands\OutputCmd.cs" />
     <Compile Include="CLI\Commands\SampleCmd.cs" />
+    <Compile Include="CLI\Commands\Subcommands\ConfigLoad.cs" />
+    <Compile Include="CLI\Commands\Subcommands\OutputLoad.cs" />
     <Compile Include="CLI\Commands\Subcommands\SampleAdd.cs" />
     <Compile Include="CLI\Commands\Subcommands\SampleCreate.cs" />
     <Compile Include="CLI\Commands\Subcommands\OutputDelete.cs" />
@@ -76,12 +79,15 @@
     <Compile Include="CLI\Commands\Subcommands\OutputCreate.cs" />
     <Compile Include="CLI\Commands\Subcommands\OutputSet.cs" />
     <Compile Include="CLI\Commands\Subcommands\SampleDelete.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SampleLoad.cs" />
     <Compile Include="CLI\Commands\Subcommands\SampleRemove.cs" />
     <Compile Include="CLI\Commands\Subcommands\SampleSubscribe.cs" />
     <Compile Include="CLI\Commands\Subcommands\SampleUnsubscribe.cs" />
     <Compile Include="CLI\Commands\Subcommands\SensorAdd.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorAvailable.cs" />
     <Compile Include="CLI\Commands\Subcommands\SensorCreate.cs" />
     <Compile Include="CLI\Commands\Subcommands\SensorDelete.cs" />
+    <Compile Include="CLI\Commands\Subcommands\SensorLoad.cs" />
     <Compile Include="CLI\Commands\Subcommands\SensorRemove.cs" />
     <Compile Include="CLI\Commands\Subcommands\SensorSetAttribute.cs" />
     <Compile Include="CLI\Commands\Subcommands\SensorStatus.cs" />

@@ -13,24 +13,31 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
         public string KeyWord { get; set; }
         public OutputBuilder Builder { get; }
 
+        private readonly OutputBuilder sensorBuilder;
+
         public SensorCreate(List<ISensor> sensors)
         {
             KeyWord = "create";
             _sensors = sensors;
             _sensorTypes = new Dictionary<string, Func<string[], ISensor>>();
             Builder = new OutputBuilder();
+            sensorBuilder = new OutputBuilder();
             Builder.AddTitle("title");
             Builder.AddAttribute("Command");
             Builder.AddAttribute("Status");
-            Builder.AddAttribute("Type");
-            Builder.AddAttribute("ID");
-            Builder.AddAttribute("Broker");
             Builder.AddAttribute("Error");
+
+
+            sensorBuilder.AddTitle("title");
+            sensorBuilder.AddAttribute("ID");
+            sensorBuilder.AddAttribute("Host");
+            sensorBuilder.AddAttribute("Tag");
+            sensorBuilder.AddAttribute("Devices");
         }
         public void ExecuteCommand(IMotionsController controller, string[] args)
         {
             Builder.BindValue("title", "Sensor");
-            Builder.BindValue("Command", "Create");
+            Builder.BindValue("Command", "create");
             if (args.Length >= 2)
             {
                 
@@ -48,23 +55,43 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
                 
                 
                 var sensor = _sensorTypes[type](args.Skip(1).ToArray());
+
+                if (!IsIdUnique(sensor.Id))
+                {
+                    Builder.BindValue("Status", "Failed");
+                    Builder.BindValue("Error", "Sensor ID is already in use");
+                    Console.WriteLine(Builder.Build());
+                    Builder.Reset();
+                    return;
+                }
+
                 _sensors.Add(sensor);
                 Builder.BindValue("Status", "Success");
-                Builder.BindValue("Type", sensor.GetType().Name);
-                Builder.BindValue("ID", sensor.Id);
-
-                if (sensor is MqttSensor mqtt)
-                {
-                    Builder.BindValue("Broker", mqtt.Broker);
-                }
                 Console.WriteLine(Builder.Build());
                 Builder.Reset();
+
+                OutputBuilder.StandardSensorOutput(sensor, sensorBuilder);
+                Console.WriteLine(sensorBuilder.Build());
+                sensorBuilder.Reset();
             }
         }
 
         public void AddSensorType(string name, Func<string[], ISensor> constructor)
         {
             _sensorTypes.Add(name, constructor);
+        }
+
+        private bool IsIdUnique(string id)
+        {
+            foreach (var sensor in _sensors)
+            {
+                if (sensor.Id == id)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

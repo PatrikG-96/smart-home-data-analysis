@@ -75,7 +75,7 @@ namespace iMotionsImportTools.CLI.Commands
                 output.Id = s[0];
                 return output;
             });
-            subCommands = new List<ICommand>{create, new OutputAvailable(outputs), new OutputDelete(outputs), new OutputSet(outputs)};
+            subCommands = new List<ICommand>{create, new OutputAvailable(outputs), new OutputDelete(outputs), new OutputSet(outputs), new OutputLoad(outputs)};
         }
         public void ExecuteCommand(IMotionsController controller, string[] args)
         {

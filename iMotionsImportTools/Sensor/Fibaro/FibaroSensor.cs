@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,8 @@ namespace iMotionsImportTools.Sensor
         private readonly string _password;
 
         private readonly Dictionary<int, FibaroJson> _data;
+        private readonly HashSet<int> _deviceIds;
+
         private Dictionary<int, FibaroJson> _scheduledFrozenData;
 
         public override string Data
@@ -56,17 +59,20 @@ namespace iMotionsImportTools.Sensor
             _username = uname;
             _data = new Dictionary<int, FibaroJson>();
             BaseTopic = "homeassistant/sensor/";
+            _deviceIds = new HashSet<int>();
         }
 
         public void AddDevice(int deviceId)
         {
             _data[deviceId] = new FibaroJson();
+            _deviceIds.Add(deviceId);
             AddTopic(BaseTopic + deviceId + "/#");
         }
 
         public void RemoveDevice(int deviceId)
         {
             _data.Remove(deviceId);
+            _deviceIds.Remove(deviceId);
             RemoveTopic(BaseTopic + deviceId + "/#");
         }
 
@@ -121,7 +127,11 @@ namespace iMotionsImportTools.Sensor
         {
             return _data[deviceId];
         }
-        
+
+        public int[] GetDeviceIds()
+        {
+            return _deviceIds.ToArray();
+        }
 
         public void OnScheduledEvent(object sender, SchedulerEventArgs args)
         {

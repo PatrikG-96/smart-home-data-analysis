@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
@@ -18,6 +19,7 @@ using iMotionsImportTools.Output;
 using iMotionsImportTools.Scheduling;
 using iMotionsImportTools.Sensor;
 using iMotionsImportTools.Sensor.WideFind;
+using Newtonsoft.Json;
 using Serilog;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -32,7 +34,11 @@ namespace iMotionsImportTools
         static void Main(string[] args)
         {
 
-            Log.Logger = new LoggerConfiguration()
+
+
+
+            //Console.ReadKey();
+            /**Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Error()
                 .WriteTo.Console()
                 .WriteTo.File("my_log.log", rollingInterval: RollingInterval.Day)
@@ -62,10 +68,10 @@ namespace iMotionsImportTools
             };
             var sample3 = new FibaroEntranceSample();
             var composite = new PosxAndDoorTemp();
-            
-            var controller = new IMotionsController(client, CancellationToken.None);
+            **/
+            var controller = new IMotionsController(CancellationToken.None);
             controller.ScheduleExports(new IntervalScheduler(100));
-            
+            /**
             controller.AddSensor(wideFind);
             //controller.AddSensor(fib);
             controller.AddSample("Pos", sample);
@@ -89,10 +95,10 @@ namespace iMotionsImportTools
             
             controller.ConnectAll();
             controller.StartAll();
-
-            //var cli = new Cli(controller);
-            //cli.Start();
-            Console.ReadKey();
+            **/
+            var cli = new Cli(controller);
+            cli.Start();
+            //Console.ReadKey();
         }
 
      

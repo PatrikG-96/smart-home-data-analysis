@@ -43,7 +43,8 @@ namespace iMotionsImportTools.CLI.Commands
                 
                 return new FibaroSensor(s1[0], s1[1], s1[2], s1[3]);
             });
-            subCommands = new List<ICommand> {new SensorStatus(), create, new SensorDelete(sensors), new SensorAdd(sensors), new SensorRemove(sensors), new SensorSetAttribute(sensors) };
+            subCommands = new List<ICommand> {new SensorStatus(), create, new SensorDelete(sensors), new SensorAdd(sensors), new SensorRemove(sensors), new SensorSetAttribute(sensors), 
+                                              new SensorLoad(sensors), new SensorAvailable(sensors) };
         }
         public void ExecuteCommand(IMotionsController controller, string[] args)
         {
@@ -67,12 +68,11 @@ namespace iMotionsImportTools.CLI.Commands
 
         private ICommand FindSubCommand(string keyword)
         {
-            Console.WriteLine("Looking for subcommand " + keyword);
+
             foreach (var cmd in subCommands)
             {
                 if (cmd.KeyWord == keyword)
                 {
-                    Console.WriteLine("Found subcommand " + keyword);
                     return cmd;
                 }
             }

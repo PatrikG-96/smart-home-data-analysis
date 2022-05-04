@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using iMotionsImportTools.Sensor;
+using iMotionsImportTools.Sensor.WideFind;
 
 namespace iMotionsImportTools.CLI
 {
@@ -177,5 +179,27 @@ namespace iMotionsImportTools.CLI
             return value;
         }
 
+
+        public static void StandardSensorOutput(ISensor sensor, OutputBuilder builder)
+        {
+            if (sensor is WideFind wideFind)
+            {
+                builder.BindValue("title", wideFind.GetType().Name);
+                builder.BindValue("ID", wideFind.Id);
+                builder.BindValue("Host", wideFind.Broker);
+                builder.BindValue("Tag", wideFind.Tag);
+
+            }
+            else if (sensor is FibaroSensor fib)
+            {
+                builder.BindValue("title", fib.GetType().Name);
+                builder.BindValue("ID", fib.Id);
+                builder.BindValue("Host", fib.Broker);
+
+                var devices = fib.GetDeviceIds();
+
+                builder.BindValue("Devices", string.Join(", ", devices));
+            }
+        }
     }
 }

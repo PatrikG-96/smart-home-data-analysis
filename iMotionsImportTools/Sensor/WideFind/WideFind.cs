@@ -15,7 +15,7 @@ namespace iMotionsImportTools.Sensor.WideFind
         // Allow for multiple tags to be used. Maybe make a handler class where a widefind instance is just a tag intance?
         // Allow for data to be extracted on per tag basis
 
-        public class WideFind : MqttSensor, ITunneler, ISchedulable
+        public class WideFind : MqttSensor, ITunneler
         {
             public const string REPORT = "REPORT";
             public const string BEACON = "BEACON";
@@ -30,11 +30,7 @@ namespace iMotionsImportTools.Sensor.WideFind
 
             public bool ShouldTunnel { get; set; }
             public event EventHandler<Sample> Transport;
-     
-
-            private WideFindJson _scheduledData;
-
-            public bool IsScheduled { get; set; }
+            
 
             public WideFind(string id, string brokerAddress) : base(id, brokerAddress)
             {
@@ -42,6 +38,7 @@ namespace iMotionsImportTools.Sensor.WideFind
                 Tag = "";
                 LogName += ":WideFind";
                 AddTopic(LTU_SYSTEM_TOPIC);
+                AddType(REPORT);
                 _latestData = new WideFindJson();
             }
 
@@ -144,13 +141,6 @@ namespace iMotionsImportTools.Sensor.WideFind
             }
 
 
-
-            public void OnScheduledEvent(object sender, SchedulerEventArgs args)
-            {
-                
-                _scheduledData = _latestData;
-                Console.WriteLine("WideFind: "+ _latestData);
-            }
         }
 }
 
