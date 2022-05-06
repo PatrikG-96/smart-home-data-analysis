@@ -22,7 +22,7 @@ namespace iMotionsImportTools.Sensor
     // TODO: 
     // Better abstraction of a FibaroSensor device.
     // 
-    public class FibaroSensor : MqttSensor, ISchedulable, ITunneler
+    public class FibaroSensor : MqttSensor, ISchedulable
     {
         
 

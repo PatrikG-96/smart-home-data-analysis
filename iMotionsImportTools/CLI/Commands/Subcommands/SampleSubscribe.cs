@@ -15,14 +15,21 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
         {
             KeyWord = "subscribe";
             _samples = samples;
-
+            Builder = new OutputBuilder();
+            Builder.AddTitle("title");
+            Builder.AddAttribute("Command");
+            Builder.AddAttribute("Status");
+            Builder.AddAttribute("Error");
         }
         public void ExecuteCommand(IMotionsController controller, string[] args)
         {
-
+            Builder.BindValue("title", "Sample");
+            Builder.BindValue("Command", "unsubscribe");
             if (args.Length != 2)
             {
-                Console.WriteLine("Invalid arguments");
+                OutputBuilder.StandardErrorOutput(Builder, "Sensor", $"Expected 2 arguments, received {args.Length}.");
+                Console.WriteLine(Builder.Build());
+                Builder.Reset();
                 return;
             }
 
@@ -32,10 +39,13 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             try
             {
                 controller.AddSampleSensorSubscription(sampleId, sensorId);
+                Builder.BindValue("Status", "Success");
             }
             catch (Exception)
             {
-                Console.WriteLine("Could not add subscription, either sensor or sample doesn't exist");
+                OutputBuilder.StandardErrorOutput(Builder, "Sensor", "Could not add subscription, either sensor or sample doesn't exist.");
+                Console.WriteLine(Builder.Build());
+                Builder.Reset();
             }
         }
 

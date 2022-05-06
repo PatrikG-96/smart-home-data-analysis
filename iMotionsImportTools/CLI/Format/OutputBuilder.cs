@@ -201,5 +201,19 @@ namespace iMotionsImportTools.CLI
                 builder.BindValue("Devices", string.Join(", ", devices));
             }
         }
+
+        public static void StandardErrorOutput(OutputBuilder builder, string command, string error)
+        {
+            builder.BindValue("title", command);
+            builder.BindValue("Status", "Failed");
+            builder.BindValue("Error", error);
+
+        }
+
+        public static void StandardSuccessOutput(OutputBuilder builder, string command, KeyValuePair<string, string> optional = default(KeyValuePair<string,string>))
+        {
+            builder.BindValue("title", command);
+            builder.BindValue("Status", "Success");
+        }
     }
 }

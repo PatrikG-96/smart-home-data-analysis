@@ -36,3 +36,5 @@ C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.xm
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.Console.xml
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.pdb
 C:\Users\shirt\smart-home-data-analysis\iMotionsImportTools\bin\Debug\Serilog.Sinks.File.xml
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\System.Threading.Tasks.Dataflow.dll
+C:\Users\Patrik G\smart-home-data-analysis\iMotionsImportTools\bin\Debug\System.Threading.Tasks.Dataflow.xml

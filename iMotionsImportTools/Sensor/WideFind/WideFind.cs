@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using iMotionsImportTools.Controller;
 using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.Scheduling;
@@ -28,6 +29,7 @@ namespace iMotionsImportTools.Sensor.WideFind
             public string Tag { get; set; }
             private readonly List<string> _typeFilters;
 
+            public Sample Sample { get; set; } = new VelAndPosZSample();
             public bool ShouldTunnel { get; set; }
             public event EventHandler<Sample> Transport;
             
@@ -78,8 +80,10 @@ namespace iMotionsImportTools.Sensor.WideFind
 
             public override void OnMessage(object sender, MqttMsgPublishEventArgs e)
             {
-
+                
                 if (!IsStarted) return;
+
+   
 
                 var message = Encoding.Default.GetString(e.Message);
                 var jsonData = JsonConvert.DeserializeObject<WideFindJson>(message);
@@ -106,16 +110,15 @@ namespace iMotionsImportTools.Sensor.WideFind
                     
                     MessageReceivedWatch.Restart();
                     
-                    lock (_latestData)
-                    {
-                        _latestData = jsonData;
-                    }
+                    
+                    _latestData = jsonData;
                     
                     
-                    Console.WriteLine(_latestData.Message);
+                    
+                    //Console.WriteLine(_latestData.Message);
 
                    
-                    Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData?.Message ?? "null");
+                  //  Log.Logger.Debug("{A}:{B} Received data: '{C}'", LogName, Tag, _latestData?.Message ?? "null");
                     
 
                     if (!ShouldTunnel)
@@ -123,12 +126,11 @@ namespace iMotionsImportTools.Sensor.WideFind
                         return;
                     }
 
-                    Log.Logger.Debug("{A}:{B} Tunneling message.", LogName, Tag);
+                    //Log.Logger.Debug("{A}:{B} Tunneling message.", LogName, Tag);
 
                     var ev = Transport;
-                    var sample = new VelocitySample();
-                    sample.InsertSensorData(this);
-                    ev?.Invoke(ev, sample);
+                    Sample.InsertSensorData(this);
+                    ev?.Invoke(ev, Sample);
                 }
                 
 
