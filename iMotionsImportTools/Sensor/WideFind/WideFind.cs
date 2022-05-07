@@ -109,9 +109,12 @@ namespace iMotionsImportTools.Sensor.WideFind
                 {
                     
                     MessageReceivedWatch.Restart();
+
+                    lock (_latestData)
+                    {
+                        _latestData = jsonData;
+                    }
                     
-                    
-                    _latestData = jsonData;
                     
                     
                     
@@ -139,7 +142,11 @@ namespace iMotionsImportTools.Sensor.WideFind
             public WideFindJson GetData()
             {
             //return IsScheduled ? _scheduledData : _latestData;
-                return _latestData?.Copy();
+                lock (_latestData)
+                {
+                    return _latestData?.Copy();
+                }
+                
             }
 
 

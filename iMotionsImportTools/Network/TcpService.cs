@@ -47,7 +47,6 @@ namespace iMotionsImportTools.Network
         public string Id { get; set; }
         public void Write(string message)
         {
-            Console.WriteLine("Sending " + message);
             _buffer.Post(message);
         }
     }
