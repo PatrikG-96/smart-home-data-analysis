@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using iMotionsImportTools.iMotionsProtocol;
@@ -26,6 +27,8 @@ namespace iMotionsImportTools.Controller
         private Dictionary<int, Tunnel> _tunnels;
 
         private IScheduler _scheduler;
+
+        private Stopwatch _timestamper;
 
         public bool IsStarted { get; private set; }
         public bool IsConnected { get; private set; }
@@ -103,6 +106,7 @@ namespace iMotionsImportTools.Controller
             }
             _scheduler?.Start();
             IsStarted = true;
+            _timestamper = Stopwatch.StartNew();
         }
 
         public void StopAll()
@@ -118,6 +122,7 @@ namespace iMotionsImportTools.Controller
             }
             _scheduler?.Stop();
             IsStarted = false;
+            _timestamper.Stop();
         }
         public void AddTunnel(int id, ITunneler tunneler)
         {
