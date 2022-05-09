@@ -20,7 +20,7 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             _sampleLoad = sampleLoad;
             KeyWord = "load";
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (args.Length != 1)
             {

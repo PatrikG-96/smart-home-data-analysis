@@ -18,7 +18,7 @@ namespace iMotionsImportTools.CLI.Commands
             subCommands = new List<ICommand>{new ControllerStart(), new ControllerStop(), new ControllerConnect(), new ControllerDisconnect()};
             
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (args.Length != 1)
             {

@@ -2,7 +2,7 @@
 
 namespace iMotionsImportTools.iMotionsProtocol
 {
-    public class FibaroEntranceSample : FibaroSample
+    public class EntranceSample : Sample
     {
 
         public string DoorMotion { get; set; }
@@ -10,8 +10,9 @@ namespace iMotionsImportTools.iMotionsProtocol
         public string DoorLight { get; set; }
         public string DoorHumidity { get; set; }
 
-        public FibaroEntranceSample() : base("Entrance")
+        public EntranceSample() : base("Entrance")
         {
+            ParentSource = "Fibaro";
         }
 
         public override string ToString()
@@ -26,7 +27,7 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public override Sample Copy()
         {
-            return new FibaroEntranceSample
+            return new EntranceSample
             {
                 DoorMotion = DoorMotion,
                 DoorHumidity = DoorHumidity,

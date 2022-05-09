@@ -20,7 +20,7 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             outputDevices = outputs;
             _outputTypes = new Dictionary<string, Func<string[], IOutputDevice>>();
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
 
             if (args.Length < 2)

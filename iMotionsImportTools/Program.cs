@@ -16,6 +16,7 @@ using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.ImportFunctions;
 using iMotionsImportTools.Network;
 using iMotionsImportTools.Output;
+using iMotionsImportTools.Protocols.H2AlProtocol;
 using iMotionsImportTools.Scheduling;
 using iMotionsImportTools.Sensor;
 using iMotionsImportTools.Sensor.WideFind;
@@ -39,7 +40,7 @@ namespace iMotionsImportTools
 
             //Console.ReadKey();
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Error()
+                .MinimumLevel.Warning()
                 .WriteTo.Console()
                 .WriteTo.File("my_log.log", rollingInterval: RollingInterval.Day)
                 .CreateLogger();
@@ -59,14 +60,20 @@ namespace iMotionsImportTools
 
 
             var client = new AsyncTcpClient();
-            client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
+            client.Connect(new ServerInfo("127.0.0.1", 5566), CancellationToken.None).Wait();
+            
 
             Task.Run(async () =>
             {
                 await client.Receive(CancellationToken.None);
             });
 
-            var service = new TcpService(client);
+            Task.Run(async () =>
+            {
+                await client.Start(CancellationToken.None);
+            });
+
+
             //var client = new FileOutput("output.txt");
             var stdout = new Stdout();
             var sample = new PositionSample();
@@ -74,11 +81,12 @@ namespace iMotionsImportTools
             {
                 Instance = "Synchronized"
             };
-            var sample3 = new FibaroEntranceSample();
+            var sample3 = new EntranceSample();
             var composite = new PosxAndDoorTemp();
-            service.Start();
-            var controller = new IMotionsController(service, CancellationToken.None);
-            controller.ScheduleExports(new IntervalScheduler(100));
+            var controller = new SensorController(client, new H2AlProtocol());
+            client.OnDisconnect += controller.OnDisconnect;
+
+            controller.SetExportScheduler(new IntervalScheduler(100));
             controller.AddSensor(wideFind);
             //controller.AddSensor(fib);
             controller.AddSample("Pos", sample);
@@ -107,8 +115,7 @@ namespace iMotionsImportTools
             Console.ReadKey();
         }
 
-     
-  
+
 
     }
 }

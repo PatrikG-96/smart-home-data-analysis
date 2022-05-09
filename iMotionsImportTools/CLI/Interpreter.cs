@@ -20,7 +20,7 @@ namespace iMotionsImportTools.CLI
             _commands.Add(command);
         }
 
-        public void Interpret(string keyword, string[] arguments, IMotionsController controller)
+        public void Interpret(string keyword, string[] arguments, SensorController controller)
         {
             foreach (var command in _commands)
             {

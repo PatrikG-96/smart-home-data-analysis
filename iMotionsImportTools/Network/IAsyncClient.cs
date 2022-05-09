@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace iMotionsImportTools.Network
 {
-    public interface IClient
+    public interface IAsyncClient
     {
         Task Send(string data);
         Task Send(string data, CancellationToken token);

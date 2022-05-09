@@ -49,7 +49,7 @@ namespace tests.UnitTests
             var sample = new MockSample();
             var output = new MockOutputDevice(n);
 
-            var controller = new IMotionsController(output, CancellationToken.None);
+            var controller = new SensorController(output, CancellationToken.None);
             controller.ScheduleExports(new MockScheduler(n));
             controller.AddSensor(sensor);
             controller.AddSample("mock", sample);

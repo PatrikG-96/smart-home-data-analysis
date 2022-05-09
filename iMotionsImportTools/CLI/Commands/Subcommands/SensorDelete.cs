@@ -21,7 +21,7 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             Builder.AddAttribute("Status");
             Builder.AddAttribute("Error");
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             Builder.BindValue("title", "Sensor");
             Builder.BindValue("Command", "delete");

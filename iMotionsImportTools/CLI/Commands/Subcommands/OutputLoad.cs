@@ -24,7 +24,7 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             _outputDevices = output;
         }
 
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (args.Length != 1)
             {

@@ -18,7 +18,7 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
             KeyWord = "available";
             outputDevices = outputs;
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
 
             if (args.Length > 0)

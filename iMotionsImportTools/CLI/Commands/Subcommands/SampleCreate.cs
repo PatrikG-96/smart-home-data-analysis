@@ -20,7 +20,7 @@ namespace iMotionsImportTools.CLI.Commands
             _samples = samples;
             _sampleTypes = new Dictionary<string, Sample>();
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
 
             if (args.Length >= 2)

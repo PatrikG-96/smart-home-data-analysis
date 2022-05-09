@@ -5,13 +5,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using iMotionsImportTools.logs;
 using iMotionsImportTools.Output;
 using Serilog;
 
 namespace iMotionsImportTools.Network
 {
-    public class AsyncTcpClient : IClient, IDisposable, IOutputDevice, ILogEntity
+    public class AsyncTcpClient : IAsyncClient, IDisposable, IOutputDevice, ILogEntity
     {
 
         public EventHandler<byte[]> OnMessageReceived;
@@ -20,6 +21,7 @@ namespace iMotionsImportTools.Network
         private TcpClient _client;
         private Stream _stream;
 
+        private BufferBlock<byte[]> _buffer;
         public bool Connected => _client != null && _client.Connected;
         public bool Receiving { get; set; }
 
@@ -34,7 +36,7 @@ namespace iMotionsImportTools.Network
         public AsyncTcpClient(string id = "")
         {
             LogName = "AsyncTcpClient:" + id;
-            
+            _buffer = new BufferBlock<byte[]>();
 
         }
 
@@ -47,6 +49,7 @@ namespace iMotionsImportTools.Network
             try
             {
                 //Log.Logger.Debug("Sending message: {A}", Encoding.Default.GetString(data));
+                Console.WriteLine($"Writing data: {Encoding.Default.GetString(data)}");
                 await _stream.WriteAsync(data, 0, data.Length, token);
                 await _stream.FlushAsync(token);
             }
@@ -66,6 +69,16 @@ namespace iMotionsImportTools.Network
                 }
             }
 
+        }
+
+        public async Task Start(CancellationToken token)
+        {
+            while (Connected)
+            {
+                var data = await _buffer.ReceiveAsync(token);
+                
+                await Send(data, token);
+            }
         }
 
         public async Task Connect(ServerInfo info, CancellationToken token)
@@ -157,10 +170,7 @@ namespace iMotionsImportTools.Network
 
         public void Write(string message)
         {
-            Task.Run(async () =>
-            {
-                await Send(message);
-            });
+            _buffer.Post(Encoding.UTF8.GetBytes(message));
         }
 
         

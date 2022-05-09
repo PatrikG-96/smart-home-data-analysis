@@ -40,6 +40,8 @@ namespace iMotionsImportTools.iMotionsProtocol
         public string MediaTime { get; set; } = "";
 
         public Sample Sample { get; set; } = null;
+
+        public string SampleString { get; set; } = "";
     
         public bool IsValid()
         {
@@ -48,7 +50,8 @@ namespace iMotionsImportTools.iMotionsProtocol
 
         public override string ToString()
         {
-            return $"{Type};{Version};{Source};{SourceDefinitionVersion};{Instance};{ElapsedTime};{MediaTime};{Sample}\r\n";
+            var sampleString = Sample == null ? SampleString : Sample.ToString();
+            return $"{Type};{Version};{Source};{SourceDefinitionVersion};{Instance};{ElapsedTime};{MediaTime};{sampleString}\r\n";
         }
         
     }

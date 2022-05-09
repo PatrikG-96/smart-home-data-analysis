@@ -6,6 +6,7 @@ namespace iMotionsImportTools.Output
     {
 
         string Id { get; set; }
+
         void Write(string message);
 
     }

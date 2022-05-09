@@ -3,31 +3,36 @@ using iMotionsImportTools.Sensor.WideFind;
 
 namespace iMotionsImportTools.iMotionsProtocol
 {
-    public class PosxAndDoorTemp : CompositeSample
+    public class PositionSample : Sample
     {
-        public string PosX { get; set; }
-        public string DoorTemp { get; set; }
 
-        public PosxAndDoorTemp() : base("PosAndTemp")
+        public string PosX { get; set; }
+        public string PosY { get; set; }
+        public string PosZ { get; set; }
+
+        public PositionSample() : base("Position")
         {
+            ParentSource = "WideFind";
         }
 
         public override string ToString()
         {
-            return $"{SampleType};{PosX};{DoorTemp}";
+            return $"{SampleType};{PosX};{PosY};{PosZ}";
         }
 
         public override void Reset()
         {
-            PosX = DoorTemp = null;
+            PosX = PosY = PosZ = null;
         }
 
         public override Sample Copy()
         {
-            return new PosxAndDoorTemp
+            return new PositionSample()
             {
-                PosX = PosX,
-                DoorTemp = DoorTemp
+                PosX = this.PosX,
+                PosY = this.PosY,
+                PosZ = this.PosZ,
+  
             };
         }
 
@@ -43,13 +48,9 @@ namespace iMotionsImportTools.iMotionsProtocol
                 }
 
                 var msg = json.ParseMessage();
-                PosX = msg.PosX;
-
-            }
-
-            if (sensor is FibaroSensor fib)
-            {
-                DoorTemp = fib.GetDeviceInfo(FibaroDevices.U121_DOOR_TEMP).Value;
+                PosX = msg?.PosX ?? "0";
+                PosY = msg?.PosY ?? "0";
+                PosZ = msg?.PosZ ?? "0";
             }
         }
     }

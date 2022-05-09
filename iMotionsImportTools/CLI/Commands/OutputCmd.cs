@@ -77,7 +77,7 @@ namespace iMotionsImportTools.CLI.Commands
             });
             subCommands = new List<ICommand>{create, new OutputAvailable(outputs), new OutputDelete(outputs), new OutputSet(outputs), new OutputLoad(outputs)};
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (args.Length == 0)
             {

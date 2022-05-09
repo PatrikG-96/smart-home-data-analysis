@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using iMotionsImportTools.Protocols;
 
 namespace iMotionsImportTools.Output
 {
     public class FileOutput: IOutputDevice
     {
 
-        private string _filename;
+        private readonly string _filename;
 
         public FileOutput(string filename)
         {

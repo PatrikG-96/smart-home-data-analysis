@@ -8,6 +8,6 @@ namespace iMotionsImportTools.CLI.Commands
         string KeyWord { get; set; }
         OutputBuilder Builder { get;}
 
-        void ExecuteCommand(IMotionsController controller, string[] args);
+        void ExecuteCommand(SensorController controller, string[] args);
     }
 }

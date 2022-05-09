@@ -17,7 +17,7 @@ namespace iMotionsImportTools.CLI.Commands
             KeyWord = "config";
             subCommands.Add(new ConfigLoad(output, sensorLoad, sampleLoad));
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (args.Length < 1)
             {

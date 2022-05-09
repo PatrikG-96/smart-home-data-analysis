@@ -13,13 +13,13 @@ namespace iMotionsImportTools.CLI
     public class Cli
     {
 
-        private IMotionsController _controller;
+        private SensorController _controller;
         private List<ISensor> _sensors;
         private List<IOutputDevice> _outputDevices;
         private List<Sample> _samples;
         private Interpreter _interpreter;
 
-        public Cli(IMotionsController controller)
+        public Cli(SensorController controller)
         {
             _controller = controller;
             _sensors = new List<ISensor>();

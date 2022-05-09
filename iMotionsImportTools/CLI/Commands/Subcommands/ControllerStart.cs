@@ -12,7 +12,7 @@ namespace iMotionsImportTools.CLI.Commands.Subcommands
         {
             KeyWord = "start";
         }
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (controller.IsStarted)
             {

@@ -19,7 +19,7 @@ namespace iMotionsImportTools.CLI.Commands
             var create = new SampleCreate(samples);
             create.AddSampleType("velocity", new VelocitySample());
             create.AddSampleType("position", new PositionSample());
-            create.AddSampleType("fibaroentrance", new FibaroEntranceSample());
+            create.AddSampleType("fibaroentrance", new EntranceSample());
             subCommands = new List<ICommand>
             {
                 create, new SampleAdd(samples), new SampleCreate(samples), new SampleRemove(samples), new SampleSubscribe(samples),
@@ -28,7 +28,7 @@ namespace iMotionsImportTools.CLI.Commands
 
         }
 
-        public void ExecuteCommand(IMotionsController controller, string[] args)
+        public void ExecuteCommand(SensorController controller, string[] args)
         {
             if (args.Length == 0)
             {

@@ -2,12 +2,14 @@
 using iMotionsImportTools.Network;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using iMotionsImportTools.iMotionsProtocol;
 using iMotionsImportTools.Output;
+using iMotionsImportTools.Protocols;
 
 namespace iMotionsImportTools.Controller
 {
@@ -17,27 +19,18 @@ namespace iMotionsImportTools.Controller
         private readonly Func<string, string> _parser;
         private readonly IOutputDevice _client;
         private readonly ITunneler _tunneler;
-        private BufferBlock<string> buffer;
-        private TcpService tcpClient;
-
-        private bool shouldRun;
+        private readonly IProtocol _protocol;
+        private  Stopwatch _timestamper;
 
         private bool _isClosed;
 
-        public Tunnel(ITunneler tunneler, IOutputDevice client, Func<string,string> parser)
+        public Tunnel(ITunneler tunneler, IOutputDevice client, IProtocol protocol)
         {
             tunneler.Transport += Forward;
             tunneler.ShouldTunnel = true;
             _tunneler = tunneler;
             _client = client;
-            _parser = parser;
-            buffer = new BufferBlock<string>();
-
-            if (client is TcpService tcp)
-            {
-                tcpClient = tcp;
-            }
-
+            _protocol = protocol;
         }
 
         public Tunnel(ITunneler tunneler, IOutputDevice client) : this(tunneler, client, null) { }
@@ -46,26 +39,17 @@ namespace iMotionsImportTools.Controller
         {
             if (_isClosed) return;
 
-           
-            var message = new Message
-            {
-                Source = sample.ParentSource, 
-                Type = Message.Event, 
-                Version = Message.DefaultVersion, 
-                //Instance = "Tunneled",
-                Sample = sample // to avoid race conditions
-            }; 
-            tcpClient.Write(message.ToString());
+            long timestamp = _timestamper.ElapsedMilliseconds;
+            _client.Write(_protocol.SampleToMessage(sample, timestamp));
             
         }
 
-
-  
 
         public void Open()
         {
             _isClosed = false;
             _tunneler.ShouldTunnel = true;
+            _timestamper = Stopwatch.StartNew();
         }
 
         public void Close()
