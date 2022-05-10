@@ -60,7 +60,7 @@ namespace iMotionsImportTools
 
 
             var client = new AsyncTcpClient();
-            client.Connect(new ServerInfo("127.0.0.1", 5566), CancellationToken.None).Wait();
+            client.Connect(new ServerInfo("127.0.0.1", 8089), CancellationToken.None).Wait();
             
 
             Task.Run(async () =>
@@ -82,24 +82,23 @@ namespace iMotionsImportTools
                 Instance = "Synchronized"
             };
             var sample3 = new EntranceSample();
-            var composite = new PosxAndDoorTemp();
-            var controller = new SensorController(client, new H2AlProtocol());
+            var controller = new SensorController(client, new IMotionsProtocol());
             client.OnDisconnect += controller.OnDisconnect;
 
             controller.SetExportScheduler(new IntervalScheduler(100));
             controller.AddSensor(wideFind);
             //controller.AddSensor(fib);
-            controller.AddSample("Pos", sample);
+            //controller.AddSample("Pos", sample);
             controller.AddSample("Vel", sample2);
             //controller.AddSample("Fib", sample3);
             //controller.AddSample("composite", composite);
-            controller.AddSampleSensorSubscription("Pos", "1");
+            //controller.AddSampleSensorSubscription("Pos", "1");
             controller.AddSampleSensorSubscription("Vel", "1");
             //controller.AddSampleSensorSubscription("Fib", "2");
             //controller.AddSampleSensorSubscription("composite", "1");
             //controller.AddSampleSensorSubscription("composite", "2");
             //controller.AddSensor(fib);
-            controller.AddTunnel(1, wideFind);
+            //controller.AddTunnel(1, wideFind);
 
             
             

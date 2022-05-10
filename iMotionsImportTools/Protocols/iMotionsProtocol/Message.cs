@@ -27,7 +27,7 @@ namespace iMotionsImportTools.iMotionsProtocol
             } 
         }
 
-        public string Version { get; set; } 
+        public string Version { get; set; } = DefaultVersion;
 
         public string Source { get; set; } 
 

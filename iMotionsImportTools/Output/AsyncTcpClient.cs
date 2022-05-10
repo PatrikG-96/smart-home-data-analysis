@@ -49,7 +49,7 @@ namespace iMotionsImportTools.Network
             try
             {
                 //Log.Logger.Debug("Sending message: {A}", Encoding.Default.GetString(data));
-                Console.WriteLine($"Writing data: {Encoding.Default.GetString(data)}");
+                //Console.WriteLine($"Writing data: {Encoding.Default.GetString(data)}");
                 await _stream.WriteAsync(data, 0, data.Length, token);
                 await _stream.FlushAsync(token);
             }
