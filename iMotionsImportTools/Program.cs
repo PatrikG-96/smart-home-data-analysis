@@ -51,7 +51,10 @@ namespace iMotionsImportTools
             //wideFind.AddType("BEACON");
             //wideFind.Tag = "B30D92054F2BF398";
             wideFind.Tag = "F1587D88122BE247";
-
+            wideFind.Sample = new VelocitySample
+            {
+                Instance = "Tunneled"
+            };
             //var fib = new FibaroSensor("2", "130.240.74.55", "your_mqtt_username", "your_mqtt_password");
             //fib.AddDevice(FibaroDevices.U121_DOOR_LIGHT);
             //fib.AddDevice(FibaroDevices.U121_DOOR_HUMIDITY);
@@ -77,10 +80,7 @@ namespace iMotionsImportTools
             //var client = new FileOutput("output.txt");
             var stdout = new Stdout();
             var sample = new PositionSample();
-            var sample2 = new VelocitySample
-            {
-                Instance = "Synchronized"
-            };
+            var sample2 = new VelocitySample();
             var sample3 = new EntranceSample();
             var controller = new SensorController(client, new IMotionsProtocol());
             client.OnDisconnect += controller.OnDisconnect;

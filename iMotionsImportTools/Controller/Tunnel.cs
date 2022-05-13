@@ -31,6 +31,7 @@ namespace iMotionsImportTools.Controller
             _tunneler = tunneler;
             _client = client;
             _protocol = protocol;
+            _isClosed = true;
         }
 
         public Tunnel(ITunneler tunneler, IOutputDevice client) : this(tunneler, client, null) { }

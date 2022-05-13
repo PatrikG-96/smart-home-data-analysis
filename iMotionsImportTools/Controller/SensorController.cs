@@ -196,9 +196,9 @@ namespace iMotionsImportTools.Controller
 
         public void AddTunnel(int id, ITunneler tunneler)
         {
-            var tunnel = new Tunnel(tunneler, _output);
+            var tunnel = new Tunnel(tunneler, _output, _protocol);
             _tunnels.Add(id, tunnel);
-
+            tunnel.Open();
         }
 
         public void RemoveTunnel(int id)
